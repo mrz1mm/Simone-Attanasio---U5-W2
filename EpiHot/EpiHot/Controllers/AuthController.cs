@@ -1,0 +1,58 @@
+﻿using EpicockX.Models;
+using EpiHot.Models;
+using EpiHot.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace EpiHot.Controllers
+{
+    public class AuthController : Controller
+    {
+        private readonly UserSvc _userSvc;
+        private readonly AuthSvc _authSvc;
+
+        public AuthController(UserSvc service, AuthSvc authService)
+        {
+            _userSvc = service;
+            _authSvc = authService;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index([Bind("Username,Password")] LoginDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["error"] = "Errore nei dati inseriti";
+                return View();
+            }
+
+            var user = _userSvc.GetUser(model);
+
+            if (user == null)
+            {
+                TempData["error"] = "Account non esistente";
+                return View();
+            }
+            _authSvc.Login(user);
+            TempData["success"] = "Login effettuato con successo";
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            _authSvc.Logout();
+
+            TempData["success"] = "Sei stato disconnesso";
+
+            return RedirectToAction("Index", "Home");
+        }
+    }
+}
