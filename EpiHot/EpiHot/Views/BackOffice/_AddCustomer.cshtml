@@ -1,0 +1,58 @@
+﻿@model EpiHot.Models.Dto.CustomerDto
+
+<!--
+
+-->
+
+<h2>Aggiungi nuovo cliente</h2>
+<form asp-action="AddCustomer" asp-controller="BackOffice" method="post">
+    <div class="form-group">
+        <label asp-for="CustomerName"></label>
+        <input asp-for="CustomerName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerSurname"></label>
+        <input asp-for="CustomerSurname" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerBirthDate"></label>
+        <input asp-for="CustomerBirthDate" class="form-control" type="date" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerBirthCity"></label>
+        <input asp-for="CustomerBirthCity" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerGender"></label>
+        <select asp-for="CustomerGender" class="form-control">
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerTaxIdCode"></label>
+        <input asp-for="CustomerTaxIdCode" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerAddress"></label>
+        <input asp-for="CustomerAddress" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerCity"></label>
+        <input asp-for="CustomerCity" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerEmail"></label>
+        <input asp-for="CustomerEmail" class="form-control" type="email" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerHomePhone"></label>
+        <input asp-for="CustomerHomePhone" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerMobilePhone"></label>
+        <input asp-for="CustomerMobilePhone" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Salva</button>
+</form>
+

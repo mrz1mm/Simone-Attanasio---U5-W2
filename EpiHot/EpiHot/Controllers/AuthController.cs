@@ -1,5 +1,4 @@
-﻿using EpicockX.Models;
-using EpiHot.Models;
+﻿using EpiHot.Models;
 using EpiHot.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

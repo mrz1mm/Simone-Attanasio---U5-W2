@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Back Office";
+}
+
+<div class="btn-group mb-4" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-primary" onclick="loadPartialView('AddCustomerPartial')">Aggiungi nuovo cliente</button>
+    <button type="button" class="btn btn-primary" onclick="loadPartialView('AddVerbalPartial')">N/D</button>
+</div>
+
+<div id="partialContainer"></div>
+
+@section Scripts {
+    <script>
+        function loadPartialView(action) {
+            $.ajax({
+                url: '@Url.Action("Index")/' + action,
+                type: 'GET',
+                success: function (result) {
+                    $('#partialContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Errore durante il caricamento della partial view: ', status, error);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            loadPartialView('AddCustomerPartial');
+        });
+    </script>
+}

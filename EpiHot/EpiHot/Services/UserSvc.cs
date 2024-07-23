@@ -1,5 +1,4 @@
-﻿using EpicockX.Models;
-using EpiHot.Models;
+﻿using EpiHot.Models;
 using Microsoft.Data.SqlClient;
 
 namespace EpiHot.Services

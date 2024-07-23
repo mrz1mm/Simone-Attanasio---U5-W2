@@ -1,4 +1,4 @@
-﻿namespace EpicockX.Models
+﻿namespace EpiHot.Models
 {
     public class LoginDto
     {
