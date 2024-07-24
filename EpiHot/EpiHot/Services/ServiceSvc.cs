@@ -1,4 +1,5 @@
 ﻿using EpiHot.Models;
+using EpiHot.Models.Dto;
 using Microsoft.Data.SqlClient;
 
 namespace EpiHot.Services
@@ -77,7 +78,7 @@ namespace EpiHot.Services
             }
         }
 
-        public void AddService(Service service)
+        public void AddService(ServiceDto serviceDto)
         {
             try
             {
@@ -87,7 +88,7 @@ namespace EpiHot.Services
                     const string INSERT_COMMAND = "INSERT INTO Services (ServiceType) VALUES (@ServiceType)";
                     using (SqlCommand cmd = new SqlCommand(INSERT_COMMAND, conn))
                     {
-                        cmd.Parameters.AddWithValue("@ServiceType", service.ServiceType);
+                        cmd.Parameters.AddWithValue("@ServiceType", serviceDto.ServiceType);
                         cmd.ExecuteNonQuery();
                     }
                 }

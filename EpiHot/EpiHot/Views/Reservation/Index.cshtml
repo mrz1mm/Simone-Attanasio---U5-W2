@@ -1,19 +1,19 @@
-﻿@model List<EpiHot.Models.Customer>
+﻿@model List<EpiHot.Models.Reservation>
 
 <div class="btn-group mb-4" role="group" aria-label="Basic example">
-    <button type="button" class="btn btn-primary" onclick="loadPartialView('GetCustomersPartial')">Lista clienti</button>
-    <button type="button" class="btn btn-primary" onclick="loadPartialView('AddCustomerPartial')">Aggiungi nuovo cliente</button>
+    <button type="button" class="btn btn-primary" onclick="loadPartialView('GetReservationsPartial')">Lista prenotazioni</button>
+    <button type="button" class="btn btn-primary" onclick="loadPartialView('AddReservationPartial')">Aggiungi nuova prenotazione</button>
 </div>
 
 <div id="partialContainer">
-    @Html.Partial("~/Views/Customer/_GetCustomers.cshtml", Model)
+    @Html.Partial("~/Views/Reservation/_GetReservations.cshtml", Model)
 </div>
 
 @section Scripts {
     <script>
         function loadPartialView(action) {
             $.ajax({
-                url: '@Url.Action()/' + action,
+                url: '@Url.Action("Index", "Reservation")/' + action,
                 type: 'GET',
                 success: function (result) {
                     $('#partialContainer').html(result);

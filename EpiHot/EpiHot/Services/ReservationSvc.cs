@@ -80,7 +80,7 @@ namespace EpiHot.Services
                                     ReservationEndStayDate = reader.GetDateTime(reader.GetOrdinal("ReservationEndStayDate")),
                                     ReservationDeposit = reader.GetDecimal(reader.GetOrdinal("ReservationDeposit")),
                                     ReservationPrice = reader.GetDecimal(reader.GetOrdinal("ReservationPrice")),
-                                    ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
+                                    ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9).ToString()),
                                     ReservationTypePrice = reader.GetDecimal(reader.GetOrdinal("ReservationTypePrice"))
                                 };
                                 reservations.Add(reservation);

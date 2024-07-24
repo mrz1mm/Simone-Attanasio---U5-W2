@@ -1,0 +1,20 @@
+﻿@model List<EpiHot.Models.Service>
+
+<h2>Elenco Servizi</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tipo di Servizio</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var service in Model)
+        {
+            <tr>
+                <td>@service.ServiceId</td>
+                <td>@service.ServiceType</td>
+            </tr>
+        }
+    </tbody>
+</table>

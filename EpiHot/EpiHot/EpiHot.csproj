@@ -7,19 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Customer\_GetCustomers.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Interfaces\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Customer\_GetCustomers.cshtml" />
   </ItemGroup>
 
 </Project>

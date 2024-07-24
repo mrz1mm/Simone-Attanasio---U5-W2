@@ -1,0 +1,38 @@
+﻿@model List<EpiHot.Models.Reservation>
+
+<h2>Elenco Prenotazioni</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>CustomerId</th>
+            <th>RoomId</th>
+            <th>ReservationNumber</th>
+            <th>ReservationDate</th>
+            <th>StartStayDate</th>
+            <th>EndStayDate</th>
+            <th>Deposit</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th>TypePrice</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reservation in Model)
+        {
+            <tr>
+                <td>@reservation.ReservationId</td>
+                <td>@reservation.CustomerId</td>
+                <td>@reservation.RoomId</td>
+                <td>@reservation.ReservationNumber</td>
+                <td>@reservation.ReservationDate.ToString("dd/MM/yyyy")</td>
+                <td>@reservation.ReservationStartStayDate.ToString("dd/MM/yyyy")</td>
+                <td>@reservation.ReservationEndStayDate.ToString("dd/MM/yyyy")</td>
+                <td>@reservation.ReservationDeposit</td>
+                <td>@reservation.ReservationPrice</td>
+                <td>@reservation.ReservationType.ToString()</td>
+                <td>@reservation.ReservationTypePrice</td>
+            </tr>
+        }
+    </tbody>
+</table>

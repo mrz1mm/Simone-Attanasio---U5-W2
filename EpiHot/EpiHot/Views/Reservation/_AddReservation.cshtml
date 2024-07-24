@@ -1,0 +1,66 @@
+﻿@model EpiHot.Models.Dto.ReservationDto
+
+<h2>Aggiungi nuova prenotazione</h2>
+<form asp-action="AddReservation" asp-controller="Reservation" method="post">
+    <!-- CustomerId -->
+    <div class="form-group">
+        <label asp-for="CustomerId"></label>
+        <input asp-for="CustomerId" class="form-control" />
+    </div>
+    <!-- RoomId -->
+    <div class="form-group">
+        <label asp-for="RoomId"></label>
+        <input asp-for="RoomId" class="form-control" />
+    </div>
+    <!-- ReservationNumber -->
+    <div class="form-group">
+        <label asp-for="ReservationNumber"></label>
+        <input asp-for="ReservationNumber" class="form-control" />
+    </div>
+    <!-- ReservationDate -->
+    <div class="form-group">
+        <label asp-for="ReservationDate"></label>
+        <input asp-for="ReservationDate" class="form-control" type="date" />
+    </div>
+    <!-- StartStayDate -->
+    <div class="form-group">
+        <label asp-for="ReservationStartStayDate"></label>
+        <input asp-for="ReservationStartStayDate" class="form-control" type="date" />
+    </div>
+    <!-- EndStayDate -->
+    <div class="form-group">
+        <label asp-for="ReservationEndStayDate"></label>
+        <input asp-for="ReservationEndStayDate" class="form-control" type="date" />
+    </div>
+    <!-- Deposit -->
+    <div class="form-group">
+        <label asp-for="ReservationDeposit"></label>
+        <input asp-for="ReservationDeposit" class="form-control" />
+    </div>
+    <!-- Price -->
+    <div class="form-group">
+        <label asp-for="ReservationPrice"></label>
+        <input asp-for="ReservationPrice" class="form-control" />
+    </div>
+    <!-- Type -->
+    <div class="form-group">
+        <label asp-for="ReservationType" class="control-label"></label>
+        <select asp-for="ReservationType" class="form-control">
+            <option value="0">HalfBoard</option>
+            <option value="1">FullBoard</option>
+            <option value="2">OvernightWithBreakfast</option>
+        </select>
+    </div>
+    <!-- TypePrice -->
+    <div class="form-group">
+        <label asp-for="ReservationTypePrice"></label>
+        <input asp-for="ReservationTypePrice" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Salva</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
