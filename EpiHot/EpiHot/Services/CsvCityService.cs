@@ -27,7 +27,7 @@ namespace InputValidation.Services
 
         public IEnumerable<City> GetByProvince(string acronym) =>
             // where fa passare solo gli elementi che soddisfano il predicato (lambda) passato come parametro
-            _cityList.Where(c => c.Province.Acronym == acronym);
+            _cityList.Where(c => c.Province.Acronym == acronym).OrderBy(c => c.Name);
 
         public City GetCityById(int id) => _cityList.Single(c => c.Id == id);
 
@@ -39,6 +39,8 @@ namespace InputValidation.Services
             // select trasforma la lista originaria secondo la funzione parametro
             _cityList.Select(c => c.Province)
             // distinct elimina i duplicati
-            .Distinct();
+            .Distinct()
+            // ordina per nome
+            .OrderBy(p => p.Name);
     }
 }

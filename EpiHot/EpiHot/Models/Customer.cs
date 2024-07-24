@@ -8,7 +8,7 @@
         public DateTime CustomerBirthDate { get; set; }
         public string CustomerBirthCity { get; set; }
         public Gender CustomerGender { get; set; }
-        public string CustomerTaxIdCode { get; set; }
+        public string CustomerFiscalCode { get; set; }
         public string CustomerAddress { get; set; }
         public string CustomerCity { get; set; }
         public string CustomerEmail { get; set; }

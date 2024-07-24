@@ -1,19 +1,20 @@
 ﻿using EpiHot.Models;
+using EpiHot.Models.Dto;
 
 namespace EpiHot.Services
 {
-    public class TaxIdCodeSvc
+    public class FiscalCodeSvc
     {
-        public string CalculateTaxIdCode(string surname, string name, char gender, DateTime birthDate, City birthCity)
+        public string CalculateFiscalCode(FiscalCodeDto2 data)
         {
             // Calcolo del nome
-            string surnameCode = CalculateSurname(surname);
+            string surnameCode = CalculateSurname(data.CustomerSurname);
             // Calcolo del cognome
-            string nameCode = CalculateName(name);
+            string nameCode = CalculateName(data.CustomerName);
             // Calcolo della data di nascita
-            string birthDateCode = CalculateBirthDate(birthDate, gender);
+            string birthDateCode = CalculateBirthDate(data.CustomerBirthDate, data.CustomerGender);
             // Calcolo del codice del comune di nascita
-            string birthCityCode = CalculateBirthCity(birthCity);
+            string birthCityCode = CalculateBirthCity(data.CustomerBirthCity);
             // Calcolo del codice fiscale parziale
             string partialCode = surnameCode + nameCode + birthDateCode + birthCityCode;
             // Calcolo del carattere di controllo
@@ -59,14 +60,14 @@ namespace EpiHot.Services
             return code.ToUpper();
         }
 
-        public string CalculateBirthDate(DateTime birthDate, char gender)
+        public string CalculateBirthDate(DateTime birthDate, Gender gender)
         {
             // Estrazione ultime due cifre dell'anno
             string year = birthDate.Year.ToString().Substring(2, 2);
             // Ottenimento del codice corrispondente al mese
             string month = GetMonthCode(birthDate.Month);
             // Calcolo del giorno in base al genere
-            string day = (gender == 'F') ? (birthDate.Day + 40).ToString("D2") : birthDate.Day.ToString("D2");
+            string day = (gender == Gender.F) ? (birthDate.Day + 40).ToString("D2") : birthDate.Day.ToString("D2");
             // Restituzione del codice completo (anno, mese e giorno)
             return year + month + day;
         }

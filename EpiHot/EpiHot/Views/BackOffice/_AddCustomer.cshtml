@@ -6,49 +6,68 @@
 
 <h2>Aggiungi nuovo cliente</h2>
 <form asp-action="AddCustomer" asp-controller="BackOffice" method="post">
+    <!-- Nome -->
     <div class="form-group">
         <label asp-for="CustomerName"></label>
         <input asp-for="CustomerName" class="form-control" />
     </div>
+    <!-- Cognome -->
     <div class="form-group">
         <label asp-for="CustomerSurname"></label>
         <input asp-for="CustomerSurname" class="form-control" />
     </div>
+    <!-- Data di nascita -->
     <div class="form-group">
         <label asp-for="CustomerBirthDate"></label>
         <input asp-for="CustomerBirthDate" class="form-control" type="date" />
     </div>
+    <!-- Genere -->
     <div class="form-group">
-        <label asp-for="CustomerBirthCity"></label>
-        <input asp-for="CustomerBirthCity" class="form-control" />
+        <label asp-for="CustomerGender" class="control-label"></label>
+        <input value="M" type="radio" asp-for="CustomerGender" checked class="form-check-input" />
+        <label class="form-check-label">M</label>
+        <input value="F" type="radio" asp-for="CustomerGender" class="form-check-input" />
+        <label class="form-check-label">F</label>
+        <span asp-validation-for="CustomerGender" class="text-danger"></span>
     </div>
+    <!-- Città di nascita -->
     <div class="form-group">
-        <label asp-for="CustomerGender"></label>
-        <select asp-for="CustomerGender" class="form-control">
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-        </select>
+        <label asp-for="CustomerBirthCity" class="control-label"></label>
+        <div class="row">
+            <div class="col-5">
+                <select id="provinces" class="form-select"></select>
+            </div>
+            <div class="col-7">
+                <select asp-for="CustomerBirthCity" id="cities" class="form-select"></select>
+            </div>
+        </div>
     </div>
+    <!-- Codice fiscale -->
     <div class="form-group">
-        <label asp-for="CustomerTaxIdCode"></label>
-        <input asp-for="CustomerTaxIdCode" class="form-control" />
+        <label asp-for="CustomerFiscalCode"></label>
+        <input asp-for="CustomerFiscalCode" class="form-control" />
     </div>
+    <!-- Indirizzo di residenza -->
     <div class="form-group">
         <label asp-for="CustomerAddress"></label>
         <input asp-for="CustomerAddress" class="form-control" />
     </div>
+    <!-- Città di residenza -->
     <div class="form-group">
         <label asp-for="CustomerCity"></label>
         <input asp-for="CustomerCity" class="form-control" />
     </div>
+    <!-- Email -->
     <div class="form-group">
         <label asp-for="CustomerEmail"></label>
         <input asp-for="CustomerEmail" class="form-control" type="email" />
     </div>
+    <!-- Telefono fisso -->
     <div class="form-group">
         <label asp-for="CustomerHomePhone"></label>
         <input asp-for="CustomerHomePhone" class="form-control" />
     </div>
+    <!-- Telefono cellulare -->
     <div class="form-group">
         <label asp-for="CustomerMobilePhone"></label>
         <input asp-for="CustomerMobilePhone" class="form-control" />
@@ -56,3 +75,37 @@
     <button type="submit" class="btn btn-primary mt-3">Salva</button>
 </form>
 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function loadCities() {
+            let province = $("#provinces").val()
+            $.ajax({
+                url: '@Url.Action("GetCities", "BackOffice")',
+                method: 'get',
+                data: { 'province': `${province}` },
+                success: (data) => {
+                    $("#cities").empty()
+                    $(data).each((_, c) => {
+                        $('<option>').text(c.name).val(c.id).appendTo($("#cities"))
+                    })
+                }
+            })
+        }
+        $(() => {
+            $.ajax({
+                url: '@Url.Action("GetProvinces", "BackOffice")',
+                method: 'get',
+                success: (data) => {
+                    $(data).each((_, p) => {
+                        $('<option>').text(p.name).val(p.acronym).appendTo($("#provinces"))
+                    })
+                    loadCities()
+                }
+            })
+            $("#provinces").change(() => loadCities())
+        })
+    </script>
+}
