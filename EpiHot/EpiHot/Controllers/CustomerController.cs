@@ -5,24 +5,33 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EpiHot.Controllers
 {
-    public class BackOfficeController : Controller
+    public class CustomerController : Controller
     {
         private readonly FiscalCodeSvc _fiscalCodeSvc;
         private readonly CsvCitySvc _citySvc;
-        public BackOfficeController(FiscalCodeSvc _fiscalCodeSvc, CsvCitySvc _citySvc)
+        private readonly CustomerSvc _customerSvc;
+        public CustomerController(FiscalCodeSvc fiscalCodeSvc, CsvCitySvc citySvc, CustomerSvc customerSvc)
         {
-            _fiscalCodeSvc = _fiscalCodeSvc;
-            _citySvc = _citySvc;
+            _fiscalCodeSvc = fiscalCodeSvc;
+            _citySvc = citySvc;
+            _customerSvc = customerSvc;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var customers = _customerSvc.GetCustomers();
+            return View(customers);
+        }
+
+        public IActionResult GetCustomersPartial()
+        {
+            var customers = _customerSvc.GetCustomers();
+            return PartialView("~/Views/Customer/_GetCustomers.cshtml", customers);
         }
 
         public IActionResult AddCustomerPartial()
         {
-            return PartialView("~/Views/BackOffice/_AddCustomer.cshtml");
+            return PartialView("~/Views/Customer/_AddCustomer.cshtml");
         }
 
         public IActionResult GetProvinces()
@@ -44,7 +53,7 @@ namespace EpiHot.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Per favore, compila tutti i campi";
-                return PartialView("~/Views/BackOffice/_AddCustomer.cshtml", customer);
+                return PartialView("~/Views/Customer/_AddCustomer.cshtml", customer);
             }
 
             try
@@ -63,9 +72,11 @@ namespace EpiHot.Controllers
             catch
             {
                 TempData["Error"] = "Errore nel calcolo del codice fiscale";
-                return PartialView("~/Views/BackOffice/_AddCustomer.cshtml", customer);
+                return PartialView("~/Views/Customer/_AddCustomer.cshtml", customer);
             }
             return RedirectToAction("Index");
         }
+
+
     }
 }

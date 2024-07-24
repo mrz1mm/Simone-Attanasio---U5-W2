@@ -1,0 +1,40 @@
+﻿@model List<EpiHot.Models.Customer>
+
+<h2>Elenco Clienti</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Data di nascita</th>
+            <th>Luogo di nascita</th>
+            <th>Sesso</th>
+            <th>Codice fiscale</th>
+            <th>Indirizzo</th>
+            <th>Città di residenza</th>
+            <th>Email</th>
+            <th>Telefono fisso</th>
+            <th>Cellulare</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@customer.CustomerId</td>
+                <td>@customer.CustomerName</td>
+                <td>@customer.CustomerSurname</td>
+                <td>@customer.CustomerBirthDate.ToString("dd/MM/yyyy")</td>
+                <td>@customer.CustomerBirthCity</td>
+                <td>@customer.CustomerGender.ToString()</td>
+                <td>@customer.CustomerFiscalCode</td>
+                <td>@customer.CustomerAddress</td>
+                <td>@customer.CustomerCity</td>
+                <td>@customer.CustomerEmail</td>
+                <td>@customer.CustomerHomePhone</td>
+                <td>@customer.CustomerMobilePhone</td>
+            </tr>
+        }
+    </tbody>
+</table>

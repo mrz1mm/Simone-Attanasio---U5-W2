@@ -79,7 +79,7 @@ namespace EpiHot.Services
                                     CustomerSurname = reader.GetString(2),
                                     CustomerBirthDate = reader.GetDateTime(3),
                                     CustomerBirthCity = reader.GetString(4),
-                                    CustomerGender = (Gender)Enum.Parse(typeof(Gender), reader.GetChar(5).ToString()),
+                                    CustomerGender = (Gender)Enum.Parse(typeof(Gender), reader.GetString(5)[0].ToString()),
                                     CustomerFiscalCode = reader.GetString(6),
                                     CustomerAddress = reader.GetString(7),
                                     CustomerCity = reader.GetString(8),

@@ -5,7 +5,7 @@
 -->
 
 <h2>Aggiungi nuovo cliente</h2>
-<form asp-action="AddCustomer" asp-controller="BackOffice" method="post">
+<form asp-action="AddCustomer" asp-controller="Customer" method="post">
     <!-- Nome -->
     <div class="form-group">
         <label asp-for="CustomerName"></label>
@@ -83,7 +83,7 @@
         function loadCities() {
             let province = $("#provinces").val()
             $.ajax({
-                url: '@Url.Action("GetCities", "BackOffice")',
+                url: '@Url.Action("GetCities", "Customer")',
                 method: 'get',
                 data: { 'province': `${province}` },
                 success: (data) => {
@@ -96,7 +96,7 @@
         }
         $(() => {
             $.ajax({
-                url: '@Url.Action("GetProvinces", "BackOffice")',
+                url: '@Url.Action("GetProvinces", "Customer")',
                 method: 'get',
                 success: (data) => {
                     $(data).each((_, p) => {

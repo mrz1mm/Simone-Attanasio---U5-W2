@@ -9,7 +9,6 @@ namespace EpiHot
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpContextAccessor();
 
@@ -20,6 +19,8 @@ namespace EpiHot
                 .AddScoped<CustomerSvc>()
                 .AddScoped<FiscalCodeSvc>()
                 .AddScoped<ReservationSvc>()
+                .AddScoped<RoomSvc>()
+                .AddScoped<ServiceSvc>()
                 .AddScoped<UserSvc>();
 
             var app = builder.Build();

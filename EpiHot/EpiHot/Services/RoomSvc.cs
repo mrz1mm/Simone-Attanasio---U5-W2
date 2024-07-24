@@ -80,8 +80,5 @@ namespace EpiHot.Services
                 throw new Exception("Errore nel recupero delle stanze", ex);
             }
         }
-
-
-
     }
 }
