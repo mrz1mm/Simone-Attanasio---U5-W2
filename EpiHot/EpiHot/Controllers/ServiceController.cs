@@ -35,7 +35,7 @@ namespace EpiHot.Controllers
         {
             var reservations = _reservationSvc.GetReservations();
             var services = _serviceSvc.GetServices();
-            var model = new ReservationServiceMW
+            var model = new AddReservationServiceMW
             {
                 Reservations = reservations,
                 Services = services,
@@ -52,24 +52,15 @@ namespace EpiHot.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddServiceToReservation(ReservationServiceMW model)
+        public IActionResult AddServiceToReservation(AddReservationServiceMW model)
         {
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                TempData["Error"] = "Errore nei dati inseriti: " + string.Join("; ", errors);
+                TempData["Error"] = "Errore nei dati inseriti";
                 return RedirectToAction("AddServiceToReservationPartial");
             }
 
-            if (model.ReservationService != null)
-            {
-                _serviceSvc.AddServiceToReservation(model.ReservationService);
-            }
-            else
-            {
-                TempData["Error"] = "Errore nel passaggio dei dati.";
-                return RedirectToAction("AddServiceToReservationPartial");
-            }
+            _serviceSvc.AddServiceToReservation(model.ReservationService);
 
             TempData["Success"] = "Servizio aggiunto alla prenotazione";
             return RedirectToAction("Index", "Service");

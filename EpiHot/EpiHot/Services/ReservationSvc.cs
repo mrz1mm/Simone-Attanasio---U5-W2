@@ -1,5 +1,6 @@
 ﻿using EpiHot.Models;
 using EpiHot.Models.Dto;
+using EpiHot.Models.MW;
 using Microsoft.Data.SqlClient;
 
 namespace EpiHot.Services
@@ -40,7 +41,6 @@ namespace EpiHot.Services
                                     ReservationDeposit = reader.GetDecimal(7),
                                     ReservationPrice = reader.GetDecimal(8),
                                     ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
-                                    ReservationTypePrice = reader.GetDecimal(10)
                                 };
                             }
                         }
@@ -81,7 +81,6 @@ namespace EpiHot.Services
                                     ReservationDeposit = reader.GetDecimal(7),
                                     ReservationPrice = reader.GetDecimal(8),
                                     ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
-                                    ReservationTypePrice = reader.GetDecimal(10)
                                 };
                                 reservations.Add(reservation);
                             }
@@ -96,11 +95,11 @@ namespace EpiHot.Services
             }
         }
 
-        public List<ReservationDto> GetReservationsDetails()
+        public List<GetReservationMW> GetReservationsDetails()
         {
             try
             {
-                List<ReservationDto> reservations = new List<ReservationDto>();
+                List<GetReservationMW> reservations = new List<GetReservationMW>();
                 using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
                 {
                     conn.Open();
@@ -114,8 +113,7 @@ namespace EpiHot.Services
                            r.ReservationEndStayDate,
                            r.ReservationDeposit,
                            r.ReservationPrice,
-                           r.ReservationType,
-                           r.ReservationTypePrice
+                           r.ReservationType
                     FROM Reservations r
                         JOIN Customers c
                             ON r.CustomerId = c.CustomerId
@@ -128,7 +126,7 @@ namespace EpiHot.Services
                         {
                             while (reader.Read())
                             {
-                                ReservationDto reservation = new ReservationDto
+                                GetReservationMW reservation = new GetReservationMW
                                 {
                                     ReservationId = reader.GetInt32(0),
                                     CustomerFullName = reader.GetString(1),
@@ -140,7 +138,6 @@ namespace EpiHot.Services
                                     ReservationDeposit = reader.GetDecimal(7),
                                     ReservationPrice = reader.GetDecimal(8),
                                     ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
-                                    ReservationTypePrice = reader.GetDecimal(10)
                                 };
                                 reservations.Add(reservation);
                             }
@@ -173,8 +170,7 @@ namespace EpiHot.Services
                            r.ReservationEndStayDate,
                            r.ReservationDeposit,
                            r.ReservationPrice,
-                           r.ReservationType,
-                           r.ReservationTypePrice
+                           r.ReservationType
                     FROM Reservations r
                         JOIN Customers c
                             ON r.CustomerId = c.CustomerId
@@ -199,7 +195,6 @@ namespace EpiHot.Services
                                     ReservationDeposit = reader.GetDecimal(7),
                                     ReservationPrice = reader.GetDecimal(8),
                                     ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
-                                    ReservationTypePrice = reader.GetDecimal(10)
                                 };
                                 reservations.Add(reservation);
                             }
@@ -214,11 +209,11 @@ namespace EpiHot.Services
             }
         }
 
-        public List<ReservationDto> GetReservationsByFullBoard()
+        public List<GetReservationMW> GetReservationsByFullBoard()
         {
             try
             {
-                List<ReservationDto> reservations = new List<ReservationDto>();
+                List<GetReservationMW> reservations = new List<GetReservationMW>();
                 using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
                 {
                     conn.Open();
@@ -232,8 +227,7 @@ namespace EpiHot.Services
                            r.ReservationEndStayDate,
                            r.ReservationDeposit,
                            r.ReservationPrice,
-                           r.ReservationType,
-                           r.ReservationTypePrice
+                           r.ReservationType
                     FROM Reservations r
                         JOIN Customers c
                             ON r.CustomerId = c.CustomerId
@@ -247,7 +241,7 @@ namespace EpiHot.Services
                         {
                             while (reader.Read())
                             {
-                                ReservationDto reservation = new ReservationDto
+                                GetReservationMW reservation = new GetReservationMW
                                 {
                                     ReservationId = reader.GetInt32(0),
                                     CustomerFullName = reader.GetString(1),
@@ -259,7 +253,6 @@ namespace EpiHot.Services
                                     ReservationDeposit = reader.GetDecimal(7),
                                     ReservationPrice = reader.GetDecimal(8),
                                     ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
-                                    ReservationTypePrice = reader.GetDecimal(10)
                                 };
                                 reservations.Add(reservation);
                             }
@@ -274,7 +267,6 @@ namespace EpiHot.Services
             }
         }
 
-        /*
         public void AddReservation(ReservationDto reservationDto)
         {
             try
@@ -282,19 +274,39 @@ namespace EpiHot.Services
                 using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
                 {
                     conn.Open();
-                    const string INSERT_CMD = "INSERT INTO Reservations (RoomId, ReservationNumber, ReservationDate, ReservationStartStayDate, ReservationEndStayDate, ReservationDeposit, ReservationPrice, ReservationType, ReservationTypePrice) VALUES (@CustomerId, @RoomId, @ReservationNumber, @ReservationDate, @ReservationStartStayDate, @ReservationEndStayDate, @ReservationDeposit, @ReservationPrice, @ReservationType, @ReservationTypePrice)";
+                    const string INSERT_CMD = @"
+                    INSERT INTO Reservations
+                    (
+                        CustomerId,
+                        RoomId,
+                        ReservationDate,
+                        ReservationStartStayDate,
+                        ReservationEndStayDate,
+                        ReservationDeposit,
+                        ReservationPrice,
+                        ReservationType
+                    )
+                    VALUES
+                    (
+                        @CustomerId,
+                        @RoomId,
+                        @ReservationDate,
+                        @ReservationStartStayDate,
+                        @ReservationEndStayDate,
+                        @ReservationDeposit,
+                        @ReservationPrice,
+                        @ReservationType
+                    )";
                     using (SqlCommand cmd = new SqlCommand(INSERT_CMD, conn))
                     {
-
+                        cmd.Parameters.AddWithValue("@CustomerId", reservationDto.CustomerId);
                         cmd.Parameters.AddWithValue("@RoomId", reservationDto.RoomId);
-                        cmd.Parameters.AddWithValue("@ReservationNumber", reservationDto.ReservationNumber);
                         cmd.Parameters.AddWithValue("@ReservationDate", reservationDto.ReservationDate);
                         cmd.Parameters.AddWithValue("@ReservationStartStayDate", reservationDto.ReservationStartStayDate);
                         cmd.Parameters.AddWithValue("@ReservationEndStayDate", reservationDto.ReservationEndStayDate);
                         cmd.Parameters.AddWithValue("@ReservationDeposit", reservationDto.ReservationDeposit);
                         cmd.Parameters.AddWithValue("@ReservationPrice", reservationDto.ReservationPrice);
                         cmd.Parameters.AddWithValue("@ReservationType", reservationDto.ReservationType.ToString());
-                        cmd.Parameters.AddWithValue("@ReservationTypePrice", reservationDto.ReservationTypePrice);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -304,7 +316,6 @@ namespace EpiHot.Services
                 throw new Exception("Error adding reservation", ex);
             }
         }
-        */
 
         public void UpdateReservation(Reservation reservation)
         {
@@ -313,7 +324,19 @@ namespace EpiHot.Services
                 using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
                 {
                     conn.Open();
-                    const string UPDATE_CMD = "UPDATE Reservations SET CustomerId = @CustomerId, RoomId = @RoomId, ReservationNumber = @ReservationNumber, ReservationDate = @ReservationDate, ReservationStartStayDate = @ReservationStartStayDate, ReservationEndStayDate = @ReservationEndStayDate, ReservationDeposit = @ReservationDeposit, ReservationPrice = @ReservationPrice, ReservationType = @ReservationType, ReservationTypePrice = @ReservationTypePrice WHERE ReservationId = @ReservationId";
+                    const string UPDATE_CMD = @"
+                    UPDATE Reservations
+                    SET
+                        CustomerId = @CustomerId,
+                        RoomId = @RoomId,
+                        ReservationNumber = @ReservationNumber,
+                        ReservationDate = @ReservationDate,
+                        ReservationStartStayDate = @ReservationStartStayDate,
+                        ReservationEndStayDate = @ReservationEndStayDate,
+                        ReservationDeposit = @ReservationDeposit,
+                        ReservationPrice = @ReservationPrice,
+                        ReservationType = @ReservationType
+                    WHERE ReservationId = @ReservationId";
                     using (SqlCommand cmd = new SqlCommand(UPDATE_CMD, conn))
                     {
                         cmd.Parameters.AddWithValue("@CustomerId", reservation.CustomerId);
@@ -325,7 +348,6 @@ namespace EpiHot.Services
                         cmd.Parameters.AddWithValue("@ReservationDeposit", reservation.ReservationDeposit);
                         cmd.Parameters.AddWithValue("@ReservationPrice", reservation.ReservationPrice);
                         cmd.Parameters.AddWithValue("@ReservationType", reservation.ReservationType.ToString());
-                        cmd.Parameters.AddWithValue("@ReservationTypePrice", reservation.ReservationTypePrice);
                         cmd.Parameters.AddWithValue("@ReservationId", reservation.ReservationId);
                         cmd.ExecuteNonQuery();
                     }

@@ -1,7 +1,5 @@
 ﻿@model List<EpiHot.Models.Service>
-@{
-    ViewBag.Title = "Pippo";
-}
+
 <div class="btn-group mb-4" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-primary" onclick="loadPartialView('GetServicesPartial')">Lista servizi</button>
     <button type="button" class="btn btn-primary" onclick="loadPartialView('AddServicePartial')">Aggiungi nuovo servizio</button>
@@ -9,15 +7,7 @@
 </div>
 
 <div id="partialContainer">
-    @if (ViewBag.Title == "Servizi")
-    {
-        @Html.Partial("~/Views/Service/_GetServices.cshtml", Model)
-    })
-    else
-    {
-    @Html.Partial("~/Views/Service/_AddService.cshtml")
-    }
-
+    @Html.Partial("~/Views/Service/_GetServices.cshtml", Model)
 </div>
 
 <script>

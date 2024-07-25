@@ -1,64 +1,54 @@
-﻿@model EpiHot.Models.Dto.ReservationDto
+﻿@model EpiHot.Models.MW.AddReservationMW
 
 <h2>Aggiungi nuova prenotazione</h2>
 <form asp-action="AddReservation" asp-controller="Reservation" method="post">
     <!-- CustomerId -->
     <div class="form-group">
-
+        <label for="CustomerId">Seleziona Cliente</label>
+        <select asp-for="Reservation.CustomerId" class="form-control" asp-items="@(new SelectList(Model.Customers, "CustomerId", "CustomerFiscalCode", Model.Reservation.CustomerId))">
+            <option value="">Seleziona un cliente</option>
+        </select>
     </div>
     <!-- RoomId -->
     <div class="form-group">
-
-    </div>
-    <!-- ReservationNumber -->
-    <div class="form-group">
-        <label asp-for="ReservationNumber"></label>
-        <input asp-for="ReservationNumber" class="form-control" />
+        <label for="RoomId">Seleziona Stanza</label>
+        <select asp-for="Reservation.RoomId" class="form-control" asp-items="@(new SelectList(Model.Rooms, "RoomId", "RoomNumber", Model.Reservation.RoomId))">
+            <option value="">Seleziona una stanza</option>
+        </select>
     </div>
     <!-- ReservationDate -->
     <div class="form-group">
-        <label asp-for="ReservationDate"></label>
-        <input asp-for="ReservationDate" class="form-control" type="date" />
+        <label asp-for="Reservation.ReservationDate">Data della Prenotazione</label>
+        <input asp-for="Reservation.ReservationDate" class="form-control" type="date" />
     </div>
     <!-- StartStayDate -->
     <div class="form-group">
-        <label asp-for="ReservationStartStayDate"></label>
-        <input asp-for="ReservationStartStayDate" class="form-control" type="date" />
+        <label asp-for="Reservation.ReservationStartStayDate">Data di Inizio Soggiorno</label>
+        <input asp-for="Reservation.ReservationStartStayDate" class="form-control" type="date" />
     </div>
     <!-- EndStayDate -->
     <div class="form-group">
-        <label asp-for="ReservationEndStayDate"></label>
-        <input asp-for="ReservationEndStayDate" class="form-control" type="date" />
+        <label asp-for="Reservation.ReservationEndStayDate">Data di Fine Soggiorno</label>
+        <input asp-for="Reservation.ReservationEndStayDate" class="form-control" type="date" />
     </div>
     <!-- Deposit -->
     <div class="form-group">
-        <label asp-for="ReservationDeposit"></label>
-        <input asp-for="ReservationDeposit" class="form-control" />
+        <label asp-for="Reservation.ReservationDeposit">Caparra</label>
+        <input asp-for="Reservation.ReservationDeposit" class="form-control" />
     </div>
     <!-- Price -->
     <div class="form-group">
-        <label asp-for="ReservationPrice"></label>
-        <input asp-for="ReservationPrice" class="form-control" />
+        <label asp-for="Reservation.ReservationPrice">Prezzo</label>
+        <input asp-for="Reservation.ReservationPrice" class="form-control" />
     </div>
     <!-- Type -->
     <div class="form-group">
-        <label asp-for="ReservationType" class="control-label"></label>
-        <select asp-for="ReservationType" class="form-control">
-            <option value="0">HalfBoard</option>
-            <option value="1">FullBoard</option>
-            <option value="2">OvernightWithBreakfast</option>
+        <label asp-for="Reservation.ReservationType" class="control-label">Tipo di Prenotazione</label>
+        <select asp-for="Reservation.ReservationType" class="form-control">
+            <option value="0">Mezza Pensione</option>
+            <option value="1">Pensione Completa</option>
+            <option value="2">Pernottamento con Colazione</option>
         </select>
-    </div>
-    <!-- TypePrice -->
-    <div class="form-group">
-        <label asp-for="ReservationTypePrice"></label>
-        <input asp-for="ReservationTypePrice" class="form-control" />
     </div>
     <button type="submit" class="btn btn-primary mt-3">Salva</button>
 </form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

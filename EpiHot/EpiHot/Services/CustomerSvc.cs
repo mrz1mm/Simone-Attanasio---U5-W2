@@ -34,7 +34,7 @@ namespace EpiHot.Services
                                     CustomerId = reader.GetInt32(0),
                                     CustomerName = reader.GetString(1),
                                     CustomerSurname = reader.GetString(2),
-                                    CustomerBirthDate = reader.GetDateTime(3),
+                                    CustomerBirthDate = DateOnly.FromDateTime(reader.GetDateTime(3)),
                                     CustomerBirthCity = reader.GetString(4),
                                     CustomerGender = (Gender)Enum.Parse(typeof(Gender), reader.GetChar(5).ToString()),
                                     CustomerFiscalCode = reader.GetString(6),
@@ -77,7 +77,7 @@ namespace EpiHot.Services
                                     CustomerId = reader.GetInt32(0),
                                     CustomerName = reader.GetString(1),
                                     CustomerSurname = reader.GetString(2),
-                                    CustomerBirthDate = reader.GetDateTime(3),
+                                    CustomerBirthDate = DateOnly.FromDateTime(reader.GetDateTime(3)),
                                     CustomerBirthCity = reader.GetString(4),
                                     CustomerGender = (Gender)Enum.Parse(typeof(Gender), reader.GetString(5)[0].ToString()),
                                     CustomerFiscalCode = reader.GetString(6),
@@ -114,7 +114,7 @@ namespace EpiHot.Services
                     {
                         cmd.Parameters.AddWithValue("@CustomerName", customerDto.CustomerName);
                         cmd.Parameters.AddWithValue("@CustomerSurname", customerDto.CustomerSurname);
-                        cmd.Parameters.AddWithValue("@CustomerBirthDate", customerDto.CustomerBirthDate);
+                        cmd.Parameters.AddWithValue("@CustomerBirthDate", customerDto.CustomerBirthDate.ToDateTime(TimeOnly.MinValue));
                         cmd.Parameters.AddWithValue("@CustomerBirthCity", customerDto.CustomerBirthCity);
                         cmd.Parameters.AddWithValue("@CustomerGender", customerDto.CustomerGender);
                         cmd.Parameters.AddWithValue("@CustomerFiscalCode", customerDto.CustomerFiscalCode);
@@ -147,7 +147,7 @@ namespace EpiHot.Services
                     {
                         cmd.Parameters.AddWithValue("@CustomerName", customer.CustomerName);
                         cmd.Parameters.AddWithValue("@CustomerSurname", customer.CustomerSurname);
-                        cmd.Parameters.AddWithValue("@CustomerBirthDate", customer.CustomerBirthDate);
+                        cmd.Parameters.AddWithValue("@CustomerBirthDate", customer.CustomerBirthDate.ToDateTime(TimeOnly.MinValue));
                         cmd.Parameters.AddWithValue("@CustomerBirthCity", customer.CustomerBirthCity);
                         cmd.Parameters.AddWithValue("@CustomerGender", customer.CustomerGender);
                         cmd.Parameters.AddWithValue("@CustomerFiscalCode", customer.CustomerFiscalCode);

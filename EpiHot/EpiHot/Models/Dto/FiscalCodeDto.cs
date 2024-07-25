@@ -5,7 +5,7 @@
         public string CustomerName { get; set; }
         public string CustomerSurname { get; set; }
         public Gender CustomerGender { get; set; }
-        public DateTime CustomerBirthDate { get; set; }
+        public DateOnly CustomerBirthDate { get; set; }
         public int CustomerBirthCity { get; set; }
     }
 
@@ -14,7 +14,7 @@
         public string CustomerName { get; set; }
         public string CustomerSurname { get; set; }
         public Gender CustomerGender { get; set; }
-        public DateTime CustomerBirthDate { get; set; }
+        public DateOnly CustomerBirthDate { get; set; }
         public City CustomerBirthCity { get; set; }
     }
 }

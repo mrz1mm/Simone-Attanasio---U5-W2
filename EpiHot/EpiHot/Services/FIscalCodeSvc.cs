@@ -60,7 +60,7 @@ namespace EpiHot.Services
             return code.ToUpper();
         }
 
-        public string CalculateBirthDate(DateTime birthDate, Gender gender)
+        public string CalculateBirthDate(DateOnly birthDate, Gender gender)
         {
             // Estrazione ultime due cifre dell'anno
             string year = birthDate.Year.ToString().Substring(2, 2);

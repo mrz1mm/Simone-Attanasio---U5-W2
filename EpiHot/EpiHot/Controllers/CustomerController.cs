@@ -10,6 +10,7 @@ namespace EpiHot.Controllers
         private readonly FiscalCodeSvc _fiscalCodeSvc;
         private readonly CsvCitySvc _citySvc;
         private readonly CustomerSvc _customerSvc;
+
         public CustomerController(FiscalCodeSvc fiscalCodeSvc, CsvCitySvc citySvc, CustomerSvc customerSvc)
         {
             _fiscalCodeSvc = fiscalCodeSvc;
@@ -48,12 +49,11 @@ namespace EpiHot.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult CalculateFiscalCode([Bind("CustomerName, CustomerSurname, CustomerGender, CustomerBirthDate, CustomerBirthCity")] FiscalCodeDto1 customer)
+        public IActionResult CalculateFiscalCode([FromBody] FiscalCodeDto1 customer)
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "Per favore, compila tutti i campi";
-                return PartialView("~/Views/Customer/_AddCustomer.cshtml", customer);
+                return BadRequest("Per favore, compila tutti i campi");
             }
 
             try
@@ -68,15 +68,12 @@ namespace EpiHot.Controllers
                     CustomerBirthCity = city
                 };
                 var fiscalCode = _fiscalCodeSvc.CalculateFiscalCode(newCustomer);
+                return Ok(new { fiscalCode });
             }
             catch
             {
-                TempData["Error"] = "Errore nel calcolo del codice fiscale";
-                return PartialView("~/Views/Customer/_AddCustomer.cshtml", customer);
+                return BadRequest("Errore nel calcolo del codice fiscale");
             }
-            return RedirectToAction("Index");
         }
-
-
     }
 }

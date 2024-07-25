@@ -14,7 +14,7 @@ namespace EpiHot.Models.Dto
 
         [Required(ErrorMessage = "La data di nascita è obbligatoria")]
         [Display(Name = "Data di nascita")]
-        public DateTime CustomerBirthDate { get; set; }
+        public DateOnly CustomerBirthDate { get; set; }
 
         [Required(ErrorMessage = "Il luogo di nascita è obbligatorio")]
         [Display(Name = "Luogo di nascita")]

@@ -29,7 +29,7 @@ namespace EpiHot.Services
                                 room = new Room
                                 {
                                     RoomId = reader.GetInt32(0),
-                                    RoomNumber = reader.GetString(1),
+                                    RoomNumber = reader.GetInt32(1),
                                     RoomDescription = reader.GetString(2),
                                     RoomType = (RoomType)Enum.Parse(typeof(RoomType), reader.GetString(3)),
                                     RoomPrice = reader.GetDecimal(4)
@@ -63,7 +63,7 @@ namespace EpiHot.Services
                                 Room room = new Room
                                 {
                                     RoomId = reader.GetInt32(0),
-                                    RoomNumber = reader.GetString(1),
+                                    RoomNumber = reader.GetInt32(1),
                                     RoomDescription = reader.GetString(2),
                                     RoomType = (RoomType)Enum.Parse(typeof(RoomType), reader.GetString(3)),
                                     RoomPrice = reader.GetDecimal(4)

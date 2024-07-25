@@ -2,7 +2,7 @@
 
 namespace EpiHot.Models.MW
 {
-    public class ReservationServiceMW
+    public class AddReservationServiceMW
     {
         public List<Reservation> Reservations { get; set; } = new List<Reservation>();
         public List<Service> Services { get; set; } = new List<Service>();
