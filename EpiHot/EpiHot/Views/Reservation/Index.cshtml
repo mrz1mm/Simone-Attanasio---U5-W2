@@ -1,7 +1,9 @@
-﻿@model List<EpiHot.Models.Reservation>
+﻿@model List<EpiHot.Models.Dto.ReservationDto>
 
 <div class="btn-group mb-4" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-primary" onclick="loadPartialView('GetReservationsPartial')">Lista prenotazioni</button>
+    <button type="button" class="btn btn-primary" onclick="loadPartialView('GetReservationsByFiscalCodePartial')">Prenotazioni tramite C.F.</button>
+    <button type="button" class="btn btn-primary" onclick="loadPartialView('GetReservationsByFullBoardPartial')">Prenotazioni di tipo pensione completa.</button>
     <button type="button" class="btn btn-primary" onclick="loadPartialView('AddReservationPartial')">Aggiungi nuova prenotazione</button>
 </div>
 
@@ -13,7 +15,7 @@
     <script>
         function loadPartialView(action) {
             $.ajax({
-                url: '@Url.Action("Index", "Reservation")/' + action,
+                url: '@Url.Action()/' + action,
                 type: 'GET',
                 success: function (result) {
                     $('#partialContainer').html(result);

@@ -30,17 +30,17 @@ namespace EpiHot.Services
                             {
                                 reservation = new Reservation
                                 {
-                                    ReservationId = reader.GetInt32(reader.GetOrdinal("ReservationId")),
-                                    CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
-                                    RoomId = reader.GetInt32(reader.GetOrdinal("RoomId")),
-                                    ReservationNumber = reader.GetString(reader.GetOrdinal("ReservationNumber")),
-                                    ReservationDate = reader.GetDateTime(reader.GetOrdinal("ReservationDate")),
-                                    ReservationStartStayDate = reader.GetDateTime(reader.GetOrdinal("ReservationStartStayDate")),
-                                    ReservationEndStayDate = reader.GetDateTime(reader.GetOrdinal("ReservationEndStayDate")),
-                                    ReservationDeposit = reader.GetDecimal(reader.GetOrdinal("ReservationDeposit")),
-                                    ReservationPrice = reader.GetDecimal(reader.GetOrdinal("ReservationPrice")),
+                                    ReservationId = reader.GetInt32(0),
+                                    CustomerId = reader.GetInt32(1),
+                                    RoomId = reader.GetInt32(2),
+                                    ReservationNumber = reader.GetInt32(3),
+                                    ReservationDate = reader.GetDateTime(4),
+                                    ReservationStartStayDate = reader.GetDateTime(5),
+                                    ReservationEndStayDate = reader.GetDateTime(6),
+                                    ReservationDeposit = reader.GetDecimal(7),
+                                    ReservationPrice = reader.GetDecimal(8),
                                     ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
-                                    ReservationTypePrice = reader.GetDecimal(reader.GetOrdinal("ReservationTypePrice"))
+                                    ReservationTypePrice = reader.GetDecimal(10)
                                 };
                             }
                         }
@@ -71,17 +71,17 @@ namespace EpiHot.Services
                             {
                                 Reservation reservation = new Reservation
                                 {
-                                    ReservationId = reader.GetInt32(reader.GetOrdinal("ReservationId")),
-                                    CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
-                                    RoomId = reader.GetInt32(reader.GetOrdinal("RoomId")),
-                                    ReservationNumber = reader.GetString(reader.GetOrdinal("ReservationNumber")),
-                                    ReservationDate = reader.GetDateTime(reader.GetOrdinal("ReservationDate")),
-                                    ReservationStartStayDate = reader.GetDateTime(reader.GetOrdinal("ReservationStartStayDate")),
-                                    ReservationEndStayDate = reader.GetDateTime(reader.GetOrdinal("ReservationEndStayDate")),
-                                    ReservationDeposit = reader.GetDecimal(reader.GetOrdinal("ReservationDeposit")),
-                                    ReservationPrice = reader.GetDecimal(reader.GetOrdinal("ReservationPrice")),
-                                    ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9).ToString()),
-                                    ReservationTypePrice = reader.GetDecimal(reader.GetOrdinal("ReservationTypePrice"))
+                                    ReservationId = reader.GetInt32(0),
+                                    CustomerId = reader.GetInt32(1),
+                                    RoomId = reader.GetInt32(2),
+                                    ReservationNumber = reader.GetInt32(3),
+                                    ReservationDate = reader.GetDateTime(4),
+                                    ReservationStartStayDate = reader.GetDateTime(5),
+                                    ReservationEndStayDate = reader.GetDateTime(6),
+                                    ReservationDeposit = reader.GetDecimal(7),
+                                    ReservationPrice = reader.GetDecimal(8),
+                                    ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
+                                    ReservationTypePrice = reader.GetDecimal(10)
                                 };
                                 reservations.Add(reservation);
                             }
@@ -96,6 +96,185 @@ namespace EpiHot.Services
             }
         }
 
+        public List<ReservationDto> GetReservationsDetails()
+        {
+            try
+            {
+                List<ReservationDto> reservations = new List<ReservationDto>();
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string SELECT_ALL_CMD = @"
+                    SELECT r.ReservationId,
+                           CONCAT(c.CustomerSurname, ' ', c.CustomerName) AS FullName,
+                           rm.RoomNumber,
+                           r.ReservationNumber,
+                           r.ReservationDate,
+                           r.ReservationStartStayDate,
+                           r.ReservationEndStayDate,
+                           r.ReservationDeposit,
+                           r.ReservationPrice,
+                           r.ReservationType,
+                           r.ReservationTypePrice
+                    FROM Reservations r
+                        JOIN Customers c
+                            ON r.CustomerId = c.CustomerId
+                        JOIN Rooms rm
+                            ON r.RoomId = rm.RoomId
+                    ORDER BY r.ReservationEndStayDate ASC;";
+                    using (SqlCommand cmd = new SqlCommand(SELECT_ALL_CMD, conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ReservationDto reservation = new ReservationDto
+                                {
+                                    ReservationId = reader.GetInt32(0),
+                                    CustomerFullName = reader.GetString(1),
+                                    RoomNumber = reader.GetInt32(2),
+                                    ReservationNumber = reader.GetInt32(3),
+                                    ReservationDate = reader.GetDateTime(4),
+                                    ReservationStartStayDate = reader.GetDateTime(5),
+                                    ReservationEndStayDate = reader.GetDateTime(6),
+                                    ReservationDeposit = reader.GetDecimal(7),
+                                    ReservationPrice = reader.GetDecimal(8),
+                                    ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
+                                    ReservationTypePrice = reader.GetDecimal(10)
+                                };
+                                reservations.Add(reservation);
+                            }
+                        }
+                    }
+                }
+                return reservations;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting reservations", ex);
+            }
+        }
+
+        public List<ReservationByFiscalCodeDto> GetReservationsByFiscalCode(string fiscalCode)
+        {
+            try
+            {
+                List<ReservationByFiscalCodeDto> reservations = new List<ReservationByFiscalCodeDto>();
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string SELECT_ALL_CMD = @"
+                    SELECT r.ReservationId,
+                           c.CustomerFiscalCode,
+                           rm.RoomNumber,
+                           r.ReservationNumber,
+                           r.ReservationDate,
+                           r.ReservationStartStayDate,
+                           r.ReservationEndStayDate,
+                           r.ReservationDeposit,
+                           r.ReservationPrice,
+                           r.ReservationType,
+                           r.ReservationTypePrice
+                    FROM Reservations r
+                        JOIN Customers c
+                            ON r.CustomerId = c.CustomerId
+                        JOIN Rooms rm
+                            ON r.RoomId = rm.RoomId";
+
+                    using (SqlCommand cmd = new SqlCommand(SELECT_ALL_CMD, conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ReservationByFiscalCodeDto reservation = new ReservationByFiscalCodeDto
+                                {
+                                    ReservationId = reader.GetInt32(0),
+                                    CustomerFiscalCode = reader.GetString(1),
+                                    RoomNumber = reader.GetInt32(2),
+                                    ReservationNumber = reader.GetInt32(3),
+                                    ReservationDate = reader.GetDateTime(4),
+                                    ReservationStartStayDate = reader.GetDateTime(5),
+                                    ReservationEndStayDate = reader.GetDateTime(6),
+                                    ReservationDeposit = reader.GetDecimal(7),
+                                    ReservationPrice = reader.GetDecimal(8),
+                                    ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
+                                    ReservationTypePrice = reader.GetDecimal(10)
+                                };
+                                reservations.Add(reservation);
+                            }
+                        }
+                    }
+                }
+                return reservations;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting reservations", ex);
+            }
+        }
+
+        public List<ReservationDto> GetReservationsByFullBoard()
+        {
+            try
+            {
+                List<ReservationDto> reservations = new List<ReservationDto>();
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string SELECT_CMD = @"
+                    SELECT r.ReservationId,
+                           CONCAT(c.CustomerSurname, ' ', c.CustomerName) AS FullName,
+                           rm.RoomNumber,
+                           r.ReservationNumber,
+                           r.ReservationDate,
+                           r.ReservationStartStayDate,
+                           r.ReservationEndStayDate,
+                           r.ReservationDeposit,
+                           r.ReservationPrice,
+                           r.ReservationType,
+                           r.ReservationTypePrice
+                    FROM Reservations r
+                        JOIN Customers c
+                            ON r.CustomerId = c.CustomerId
+                        JOIN Rooms rm
+                            ON r.RoomId = rm.RoomId
+                    WHERE r.ReservationType = 'FullBoard'
+                    ORDER BY r.ReservationEndStayDate ASC;";
+                    using (SqlCommand cmd = new SqlCommand(SELECT_CMD, conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ReservationDto reservation = new ReservationDto
+                                {
+                                    ReservationId = reader.GetInt32(0),
+                                    CustomerFullName = reader.GetString(1),
+                                    RoomNumber = reader.GetInt32(2),
+                                    ReservationNumber = reader.GetInt32(3),
+                                    ReservationDate = reader.GetDateTime(4),
+                                    ReservationStartStayDate = reader.GetDateTime(5),
+                                    ReservationEndStayDate = reader.GetDateTime(6),
+                                    ReservationDeposit = reader.GetDecimal(7),
+                                    ReservationPrice = reader.GetDecimal(8),
+                                    ReservationType = (ReservationType)Enum.Parse(typeof(ReservationType), reader.GetString(9)),
+                                    ReservationTypePrice = reader.GetDecimal(10)
+                                };
+                                reservations.Add(reservation);
+                            }
+                        }
+                    }                   
+                }
+                return reservations;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting reservations", ex);
+            }
+        }
+
+        /*
         public void AddReservation(ReservationDto reservationDto)
         {
             try
@@ -103,10 +282,10 @@ namespace EpiHot.Services
                 using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
                 {
                     conn.Open();
-                    const string INSERT_CMD = "INSERT INTO Reservations (CustomerId, RoomId, ReservationNumber, ReservationDate, ReservationStartStayDate, ReservationEndStayDate, ReservationDeposit, ReservationPrice, ReservationType, ReservationTypePrice) VALUES (@CustomerId, @RoomId, @ReservationNumber, @ReservationDate, @ReservationStartStayDate, @ReservationEndStayDate, @ReservationDeposit, @ReservationPrice, @ReservationType, @ReservationTypePrice)";
+                    const string INSERT_CMD = "INSERT INTO Reservations (RoomId, ReservationNumber, ReservationDate, ReservationStartStayDate, ReservationEndStayDate, ReservationDeposit, ReservationPrice, ReservationType, ReservationTypePrice) VALUES (@CustomerId, @RoomId, @ReservationNumber, @ReservationDate, @ReservationStartStayDate, @ReservationEndStayDate, @ReservationDeposit, @ReservationPrice, @ReservationType, @ReservationTypePrice)";
                     using (SqlCommand cmd = new SqlCommand(INSERT_CMD, conn))
                     {
-                        cmd.Parameters.AddWithValue("@CustomerId", reservationDto.CustomerId);
+
                         cmd.Parameters.AddWithValue("@RoomId", reservationDto.RoomId);
                         cmd.Parameters.AddWithValue("@ReservationNumber", reservationDto.ReservationNumber);
                         cmd.Parameters.AddWithValue("@ReservationDate", reservationDto.ReservationDate);
@@ -125,6 +304,7 @@ namespace EpiHot.Services
                 throw new Exception("Error adding reservation", ex);
             }
         }
+        */
 
         public void UpdateReservation(Reservation reservation)
         {

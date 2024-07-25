@@ -1,9 +1,9 @@
 ﻿namespace EpiHot.Models.Dto
 {
-    public class ReservationDto
+    public class ReservationByFiscalCodeDto
     {
         public int ReservationId { get; set; }
-        public string CustomerFullName { get; set; }
+        public string CustomerFiscalCode { get; set; }
         public int RoomNumber { get; set; }
         public int ReservationNumber { get; set; }
         public DateTime ReservationDate { get; set; }

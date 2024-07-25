@@ -1,6 +1,6 @@
 ﻿@model List<EpiHot.Models.Dto.ReservationDto>
 
-<h2>Elenco Prenotazioni</h2>
+<h2>Elenco Prenotazioni di tipo pensione completa</h2>
 <table class="table">
     <thead>
         <tr>
@@ -14,7 +14,6 @@
             <th>Prezzo</th>
             <th>Tipo di soggiorno</th>
             <th>Prezzo tipo di soggiorno</th>
-            <th>Aggiungi servizio</th>
         </tr>
     </thead>
     <tbody>
@@ -31,14 +30,7 @@
                 <td>@reservation.ReservationPrice</td>
                 <td>@reservation.ReservationType.ToString()</td>
                 <td>@reservation.ReservationTypePrice</td>
-                <td><i class="bi bi-plus-square"></i></td>
             </tr>
         }
     </tbody>
 </table>
-
-@section Scripts {
-<script>
-
-</script>
-}

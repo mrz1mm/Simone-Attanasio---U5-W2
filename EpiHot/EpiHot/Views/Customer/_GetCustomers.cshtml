@@ -4,7 +4,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Nome</th>
             <th>Cognome</th>
             <th>Data di nascita</th>
@@ -22,7 +21,6 @@
         @foreach (var customer in Model)
         {
             <tr>
-                <td>@customer.CustomerId</td>
                 <td>@customer.CustomerName</td>
                 <td>@customer.CustomerSurname</td>
                 <td>@customer.CustomerBirthDate.ToString("dd/MM/yyyy")</td>

@@ -99,6 +99,34 @@ namespace EpiHot.Services
             }
         }
 
+        public void AddServiceToReservation(ReservationServiceDto reservationService)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string INSERT_COMMAND = @"
+                    INSERT INTO ReservationServices 
+                    (ReservationId, ServiceId, ServiceDate, ServiceQuantity, ServicePrice) 
+                    VALUES (@ReservationId, @ServiceId, @ServiceDate, @ServiceQuantity, @ServicePrice)";
+                    using (SqlCommand cmd = new SqlCommand(INSERT_COMMAND, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ReservationId", reservationService.ReservationId);
+                        cmd.Parameters.AddWithValue("@ServiceId", reservationService.ServiceId);
+                        cmd.Parameters.AddWithValue("@ServiceDate", reservationService.ServiceDate);
+                        cmd.Parameters.AddWithValue("@ServiceQuantity", reservationService.ServiceQuantity);
+                        cmd.Parameters.AddWithValue("@ServicePrice", reservationService.ServicePrice);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errore nell'aggiunta del servizio alla prenotazione", ex);
+            }
+        }
+
         public void UpdateService(Service service)
         {
             try
