@@ -15,6 +15,7 @@
             <th>Email</th>
             <th>Telefono fisso</th>
             <th>Cellulare</th>
+            <th>Azioni</th>
         </tr>
     </thead>
     <tbody>
@@ -32,6 +33,16 @@
                 <td>@customer.CustomerEmail</td>
                 <td>@customer.CustomerHomePhone</td>
                 <td>@customer.CustomerMobilePhone</td>
+                <td>
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-warning btn-sm btnUpdate me-1" data-id="@customer.CustomerId" onclick="loadUpdateCustomerPartial(@customer.CustomerId)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm btnDelete" data-id="@customer.CustomerId" onclick="deleteCustomer(@customer.CustomerId)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
             </tr>
         }
     </tbody>

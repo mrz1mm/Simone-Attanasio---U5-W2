@@ -32,6 +32,12 @@ namespace EpiHot.Controllers
             return PartialView("~/Views/Service/_AddService.cshtml");
         }
 
+        public IActionResult UpdateServicePartial(int serviceId)
+        {
+            var service = _serviceSvc.GetService(serviceId);
+            return PartialView("~/Views/Service/_UpdateService.cshtml", service);
+        }
+
         public IActionResult AddServiceToReservationPartial(int? reservationId)
         {
             var reservations = _reservationSvc.GetReservations();
@@ -81,22 +87,26 @@ namespace EpiHot.Controllers
             return RedirectToAction("Index", "Service");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateService(Service service)
         {
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Errore nei dati inseriti";
-                return RedirectToAction("AddServicePartial");
+                return RedirectToAction("Index");
             }
 
             _serviceSvc.UpdateService(service);
             return RedirectToAction("Index", "Service");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteService(int serviceId)
         {
             _serviceSvc.DeleteService(serviceId);
-            return RedirectToAction("Index", "Service");
+            return Json(new { success = true });
         }
     }
 }

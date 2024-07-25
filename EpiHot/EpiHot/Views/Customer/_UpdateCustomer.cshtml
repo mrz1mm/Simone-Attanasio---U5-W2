@@ -1,8 +1,9 @@
-﻿@model EpiHot.Models.Dto.CustomerDto
+﻿@model EpiHot.Models.Customer
 
-<h2>Aggiungi nuovo cliente</h2>
-<form asp-action="AddCustomer" asp-controller="Customer" method="post">
+<h2>Modifica Cliente</h2>
+<form asp-action="UpdateCustomer" asp-controller="Customer" method="post">
     @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="CustomerId" />
     <div class="form-group">
         <label asp-for="CustomerName"></label>
         <input asp-for="CustomerName" class="form-control" />
@@ -50,5 +51,5 @@
         <label asp-for="CustomerMobilePhone"></label>
         <input asp-for="CustomerMobilePhone" class="form-control" />
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Salva</button>
+    <button type="submit" class="btn btn-primary mt-3">Modifica</button>
 </form>

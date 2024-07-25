@@ -6,6 +6,10 @@
     <button type="button" class="btn btn-primary" onclick="loadPartialView('AddServiceToReservationPartial')">Aggiungi un servizio ad una prenotazione</button>
 </div>
 
+<form id="antiForgeryForm" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
 <div id="partialContainer">
     @Html.Partial("~/Views/Service/_GetServices.cshtml", Model)
 </div>
@@ -20,6 +24,43 @@
             },
             error: function (xhr, status, error) {
                 console.error('Errore durante il caricamento della partial view: ', status, error);
+            }
+        });
+    }
+
+    function loadUpdateServicePartial(serviceId) {
+        $.ajax({
+            url: '@Url.Action("UpdateServicePartial", "Service")',
+            type: 'GET',
+            data: { serviceId: serviceId },
+            success: function (result) {
+                $('#partialContainer').html(result);
+            },
+            error: function (xhr, status, error) {
+                alert('Errore durante il caricamento del servizio da modificare.');
+            }
+        });
+    }
+
+    function deleteService(serviceId) {
+        var token = $('#antiForgeryForm input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            url: '@Url.Action("DeleteService", "Service")',
+            type: 'POST',
+            data: {
+                serviceId: serviceId,
+                __RequestVerificationToken: token
+            },
+            success: function (result) {
+                if (result.success) {
+                    $('button[data-id="' + serviceId + '"]').closest('tr').remove();
+                } else {
+                    alert('Errore durante la cancellazione del servizio.');
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Errore durante la cancellazione del servizio.');
             }
         });
     }

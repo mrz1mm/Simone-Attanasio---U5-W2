@@ -1,0 +1,12 @@
+﻿@model EpiHot.Models.Service
+
+<h2>Modifica Servizio</h2>
+<form asp-action="UpdateService" asp-controller="Service" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ServiceId" />
+    <div class="form-group">
+        <label asp-for="ServiceType"></label>
+        <input asp-for="ServiceType" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Modifica</button>
+</form>

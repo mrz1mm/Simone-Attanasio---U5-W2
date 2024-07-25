@@ -1,4 +1,5 @@
-﻿using EpiHot.Models.Dto;
+﻿using EpiHot.Models;
+using EpiHot.Models.Dto;
 using EpiHot.Services;
 using InputValidation.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -35,20 +36,52 @@ namespace EpiHot.Controllers
             return PartialView("~/Views/Customer/_AddCustomer.cshtml");
         }
 
-        public IActionResult GetProvinces()
+        public IActionResult UpdateCustomerPartial(int customerId)
         {
-            var provinces = _citySvc.GetProvinces();
-            return Json(provinces);
-        }
-
-        public IActionResult GetCities(string province)
-        {
-            var cities = _citySvc.GetByProvince(province);
-            return Json(cities);
+            var customer = _customerSvc.GetCustomer(customerId);
+            return PartialView("~/Views/Customer/_UpdateCustomer.cshtml", customer);
         }
 
         [HttpPost]
-        [AutoValidateAntiforgeryToken]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddCustomer(CustomerDto customerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Errore nei dati inseriti";
+                return RedirectToAction("AddCustomerPartial");
+            }
+
+            _customerSvc.AddCustomer(customerDto);
+
+            TempData["Success"] = "Cliente aggiunto";
+            return RedirectToAction("Index", "Customer");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCustomer(Customer customer)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Errore nei dati inseriti";
+                return RedirectToAction("Index");
+            }
+
+            _customerSvc.UpdateCustomer(customer);
+            return RedirectToAction("Index", "Customer");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteCustomer(int customerId)
+        {
+            _customerSvc.DeleteCustomer(customerId);
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult CalculateFiscalCode([FromBody] FiscalCodeDto1 customer)
         {
             if (!ModelState.IsValid)

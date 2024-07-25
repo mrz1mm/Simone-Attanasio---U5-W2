@@ -1,15 +1,26 @@
 ﻿@model List<EpiHot.Models.Customer>
 
+@{
+    ViewData["Title"] = "Gestione Clienti";
+}
+
+<h2>Gestione Clienti</h2>
+
 <div class="btn-group mb-4" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-primary" onclick="loadPartialView('GetCustomersPartial')">Lista clienti</button>
     <button type="button" class="btn btn-primary" onclick="loadPartialView('AddCustomerPartial')">Aggiungi nuovo cliente</button>
 </div>
+
+<form id="antiForgeryForm" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
 
 <div id="partialContainer">
     @Html.Partial("~/Views/Customer/_GetCustomers.cshtml", Model)
 </div>
 
 @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function loadPartialView(action) {
             $.ajax({
@@ -23,5 +34,42 @@
                 }
             });
         }
-    </script> 
+
+        function loadUpdateCustomerPartial(customerId) {
+            $.ajax({
+                url: '@Url.Action("UpdateCustomerPartial", "Customer")',
+                type: 'GET',
+                data: { customerId: customerId },
+                success: function (result) {
+                    $('#partialContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    alert('Errore durante il caricamento del cliente da modificare.');
+                }
+            });
+        }
+
+        function deleteCustomer(customerId) {
+            var token = $('#antiForgeryForm input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                url: '@Url.Action("DeleteCustomer", "Customer")',
+                type: 'POST',
+                data: {
+                    customerId: customerId,
+                    __RequestVerificationToken: token
+                },
+                success: function (result) {
+                    if (result.success) {
+                        $('button[data-id="' + customerId + '"]').closest('tr').remove();
+                    } else {
+                        alert('Errore durante la cancellazione del cliente.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('Errore durante la cancellazione del cliente.');
+                }
+            });
+        }
+    </script>
 }
