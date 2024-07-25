@@ -1,5 +1,6 @@
 ﻿using EpiHot.Models;
 using EpiHot.Models.Dto;
+using EpiHot.Models.MW;
 using EpiHot.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +42,13 @@ namespace EpiHot.Controllers
             return PartialView("~/Views/Reservation/_GetReservationsByFullBoard.cshtml", reservations);
         }
 
+        [HttpGet]
+        public IActionResult GetReservationsByFiscalCode(string fiscalCode)
+        {
+            var reservations = _reservationSvc.GetReservationsByFiscalCode(fiscalCode);
+            return PartialView("_ReservationsByFiscalCodeResults", reservations);
+        }
+
         public IActionResult AddReservationPartial()
         {
             var customers = _customerSvc.GetCustomers();
@@ -54,12 +62,31 @@ namespace EpiHot.Controllers
             return PartialView("~/Views/Reservation/_AddReservation.cshtml", model);
         }
 
-        [HttpGet]
-        public IActionResult GetReservationsByFiscalCode(string fiscalCode)
+        public IActionResult UpdateReservationPartial(int reservationId)
         {
-            var reservations = _reservationSvc.GetReservationsByFiscalCode(fiscalCode);
-            return PartialView("_ReservationsByFiscalCodeResults", reservations);
+            var reservation = _reservationSvc.GetReservation(reservationId);
+            var customers = _customerSvc.GetCustomers();
+            var rooms = _roomSvc.GetRooms();
+            var model = new AddReservationMW
+            {
+                Customers = customers,
+                Rooms = rooms,
+                Reservation = new ReservationDto
+                {
+                    ReservationId = reservation.ReservationId,
+                    CustomerId = reservation.CustomerId,
+                    RoomId = reservation.RoomId,
+                    ReservationDate = reservation.ReservationDate,
+                    ReservationStartStayDate = reservation.ReservationStartStayDate,
+                    ReservationEndStayDate = reservation.ReservationEndStayDate,
+                    ReservationDeposit = reservation.ReservationDeposit,
+                    ReservationPrice = reservation.ReservationPrice,
+                    ReservationType = reservation.ReservationType
+                }
+            };
+            return PartialView("~/Views/Reservation/_UpdateReservation.cshtml", model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -77,8 +104,9 @@ namespace EpiHot.Controllers
             return RedirectToAction("Index");
         }
 
-
-        public IActionResult UpdateReservation(Reservation reservation)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateReservation(ReservationDto reservation)
         {
             if (!ModelState.IsValid)
             {
@@ -92,15 +120,12 @@ namespace EpiHot.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteReservation(int reservationId)
         {
             _reservationSvc.DeleteReservation(reservationId);
-
-            TempData["Success"] = "Prenotazione eliminata con successo";
-            return RedirectToAction("Index");
+            return Json(new { success = true });
         }
-
-
     }
 }

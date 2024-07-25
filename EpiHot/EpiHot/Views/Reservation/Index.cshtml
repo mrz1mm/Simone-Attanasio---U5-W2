@@ -7,6 +7,10 @@
     <button type="button" class="btn btn-primary" onclick="loadPartialView('AddReservationPartial')">Aggiungi nuova prenotazione</button>
 </div>
 
+<form id="antiForgeryForm" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
 <div id="partialContainer">
     @Html.Partial("~/Views/Reservation/_GetReservations.cshtml", Model)
 </div>
@@ -25,5 +29,43 @@
                 }
             });
         }
+
+        function loadUpdateReservationPartial(reservationId) {
+            $.ajax({
+                url: '@Url.Action("UpdateReservationPartial", "Reservation")',
+                type: 'GET',
+                data: { reservationId: reservationId },
+                success: function (result) {
+                    $('#partialContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    alert('Errore durante il caricamento della prenotazione da modificare.');
+                }
+            });
+        }
+
+        function deleteReservation(reservationId) {
+            var token = $('#antiForgeryForm input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                url: '@Url.Action("DeleteReservation", "Reservation")',
+                type: 'POST',
+                data: {
+                    reservationId: reservationId,
+                    __RequestVerificationToken: token
+                },
+                success: function (result) {
+                    if (result.success) {
+                        $('button[data-id="' + reservationId + '"]').closest('tr').remove();
+                    } else {
+                        alert('Errore durante la cancellazione della prenotazione.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('Errore durante la cancellazione della prenotazione.');
+                }
+            });
+        }
     </script>
 }
+

@@ -13,7 +13,7 @@ namespace EpiHot.Services
             _config = config;
         }
 
-        public Reservation GetReservation(int id)
+        public Reservation GetReservation(int reservationId)
         {
             try
             {
@@ -21,10 +21,10 @@ namespace EpiHot.Services
                 using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
                 {
                     conn.Open();
-                    const string SELECT_BY_ID_CMD = "SELECT * FROM Reservations WHERE Id = @Id";
+                    const string SELECT_BY_ID_CMD = "SELECT * FROM Reservations WHERE ReservationId = @ReservationId";
                     using (SqlCommand cmd = new SqlCommand(SELECT_BY_ID_CMD, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.Parameters.AddWithValue("@ReservationId", reservationId);
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
@@ -317,7 +317,7 @@ namespace EpiHot.Services
             }
         }
 
-        public void UpdateReservation(Reservation reservation)
+        public void UpdateReservation(ReservationDto reservationDto)
         {
             try
             {
@@ -329,7 +329,6 @@ namespace EpiHot.Services
                     SET
                         CustomerId = @CustomerId,
                         RoomId = @RoomId,
-                        ReservationNumber = @ReservationNumber,
                         ReservationDate = @ReservationDate,
                         ReservationStartStayDate = @ReservationStartStayDate,
                         ReservationEndStayDate = @ReservationEndStayDate,
@@ -339,16 +338,15 @@ namespace EpiHot.Services
                     WHERE ReservationId = @ReservationId";
                     using (SqlCommand cmd = new SqlCommand(UPDATE_CMD, conn))
                     {
-                        cmd.Parameters.AddWithValue("@CustomerId", reservation.CustomerId);
-                        cmd.Parameters.AddWithValue("@RoomId", reservation.RoomId);
-                        cmd.Parameters.AddWithValue("@ReservationNumber", reservation.ReservationNumber);
-                        cmd.Parameters.AddWithValue("@ReservationDate", reservation.ReservationDate);
-                        cmd.Parameters.AddWithValue("@ReservationStartStayDate", reservation.ReservationStartStayDate);
-                        cmd.Parameters.AddWithValue("@ReservationEndStayDate", reservation.ReservationEndStayDate);
-                        cmd.Parameters.AddWithValue("@ReservationDeposit", reservation.ReservationDeposit);
-                        cmd.Parameters.AddWithValue("@ReservationPrice", reservation.ReservationPrice);
-                        cmd.Parameters.AddWithValue("@ReservationType", reservation.ReservationType.ToString());
-                        cmd.Parameters.AddWithValue("@ReservationId", reservation.ReservationId);
+                        cmd.Parameters.AddWithValue("@CustomerId", reservationDto.CustomerId);
+                        cmd.Parameters.AddWithValue("@RoomId", reservationDto.RoomId);
+                        cmd.Parameters.AddWithValue("@ReservationDate", reservationDto.ReservationDate);
+                        cmd.Parameters.AddWithValue("@ReservationStartStayDate", reservationDto.ReservationStartStayDate);
+                        cmd.Parameters.AddWithValue("@ReservationEndStayDate", reservationDto.ReservationEndStayDate);
+                        cmd.Parameters.AddWithValue("@ReservationDeposit", reservationDto.ReservationDeposit);
+                        cmd.Parameters.AddWithValue("@ReservationPrice", reservationDto.ReservationPrice);
+                        cmd.Parameters.AddWithValue("@ReservationType", reservationDto.ReservationType.ToString());
+                        cmd.Parameters.AddWithValue("@ReservationId", reservationDto.ReservationId);
                         cmd.ExecuteNonQuery();
                     }
                 }
