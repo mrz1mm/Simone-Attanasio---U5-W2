@@ -2,53 +2,143 @@
 
 <h2>Aggiungi nuovo cliente</h2>
 <form asp-action="AddCustomer" asp-controller="Customer" method="post">
-    @Html.AntiForgeryToken()
+    <!-- Nome -->
     <div class="form-group">
         <label asp-for="CustomerName"></label>
-        <input asp-for="CustomerName" class="form-control" />
+        <input asp-for="CustomerName" class="form-control" id="CustomerName" />
     </div>
+    <!-- Cognome -->
     <div class="form-group">
         <label asp-for="CustomerSurname"></label>
-        <input asp-for="CustomerSurname" class="form-control" />
+        <input asp-for="CustomerSurname" class="form-control" id="CustomerSurname" />
     </div>
+    <!-- Data di nascita -->
     <div class="form-group">
         <label asp-for="CustomerBirthDate"></label>
-        <input asp-for="CustomerBirthDate" class="form-control" type="date" />
+        <input asp-for="CustomerBirthDate" class="form-control" type="date" id="CustomerBirthDate" />
     </div>
+    <!-- Genere -->
     <div class="form-group">
-        <label asp-for="CustomerBirthCity"></label>
-        <input asp-for="CustomerBirthCity" class="form-control" />
+        <label asp-for="CustomerGender" class="control-label"></label>
+        <input value="M" type="radio" asp-for="CustomerGender" name="CustomerGender" class="form-check-input" id="CustomerGenderM" />
+        <label class="form-check-label">M</label>
+        <input value="F" type="radio" asp-for="CustomerGender" name="CustomerGender" class="form-check-input" id="CustomerGenderF" />
+        <label class="form-check-label">F</label>
+        <span asp-validation-for="CustomerGender" class="text-danger"></span>
     </div>
+    <!-- Città di nascita -->
     <div class="form-group">
-        <label asp-for="CustomerGender"></label>
-        <select asp-for="CustomerGender" class="form-control">
-            <option value="Male">Maschio</option>
-            <option value="Female">Femmina</option>
-        </select>
+        <label asp-for="CustomerBirthCity" class="control-label"></label>
+        <div class="row">
+            <div class="col-5">
+                <select id="provinces" class="form-select"></select>
+            </div>
+            <div class="col-7">
+                <select asp-for="CustomerBirthCity" id="cities" class="form-select"></select>
+            </div>
+        </div>
     </div>
+    <!-- Codice fiscale -->
     <div class="form-group">
         <label asp-for="CustomerFiscalCode"></label>
-        <input asp-for="CustomerFiscalCode" class="form-control" />
+        <div class="d-flex">
+            <button type="button" id="generateFiscalCode" class="btn btn-success me-3">Genera</button>
+            <input asp-for="CustomerFiscalCode" class="form-control" id="CustomerFiscalCode" />
+        </div>
     </div>
+    <!-- Indirizzo di residenza -->
     <div class="form-group">
         <label asp-for="CustomerAddress"></label>
-        <input asp-for="CustomerAddress" class="form-control" />
+        <input asp-for="CustomerAddress" class="form-control" id="CustomerAddress" />
     </div>
+    <!-- Città di residenza -->
     <div class="form-group">
         <label asp-for="CustomerCity"></label>
-        <input asp-for="CustomerCity" class="form-control" />
+        <input asp-for="CustomerCity" class="form-control" id="CustomerCity" />
     </div>
+    <!-- Email -->
     <div class="form-group">
         <label asp-for="CustomerEmail"></label>
-        <input asp-for="CustomerEmail" class="form-control" />
+        <input asp-for="CustomerEmail" class="form-control" type="email" id="CustomerEmail" />
     </div>
+    <!-- Telefono fisso -->
     <div class="form-group">
         <label asp-for="CustomerHomePhone"></label>
-        <input asp-for="CustomerHomePhone" class="form-control" />
+        <input asp-for="CustomerHomePhone" class="form-control" id="CustomerHomePhone" />
     </div>
+    <!-- Telefono cellulare -->
     <div class="form-group">
         <label asp-for="CustomerMobilePhone"></label>
-        <input asp-for="CustomerMobilePhone" class="form-control" />
+        <input asp-for="CustomerMobilePhone" class="form-control" id="CustomerMobilePhone" />
     </div>
     <button type="submit" class="btn btn-primary mt-3">Salva</button>
 </form>
+
+<script>
+    // Carica le province
+    $(() => {
+        $.ajax({
+            url: '@Url.Action("GetProvinces", "Customer")',
+            method: 'get',
+            success: (data) => {
+                $(data).each((_, p) => {
+                    $('<option>').text(p.name).val(p.acronym).appendTo($("#provinces"))
+                })
+                loadCities()
+            }
+        })
+        $("#provinces").change(() => loadCities())
+    })
+
+    // Carica le città in base alla provincia selezionata
+    function loadCities() {
+        let province = $("#provinces").val()
+        $.ajax({
+            url: '@Url.Action("GetCities", "Customer")',
+            method: 'get',
+            data: { 'province': `${province}` },
+            success: (data) => {
+                $("#cities").empty()
+                $(data).each((_, c) => {
+                    $('<option>').text(c.name).val(c.id).appendTo($("#cities"))
+                })
+            }
+        })
+    }
+
+    // Genera Codice Fiscale
+    $("#generateFiscalCode").click(() => {
+        const customer = {
+            CustomerName: $("#CustomerName").val(),
+            CustomerSurname: $("#CustomerSurname").val(),
+            CustomerGender: $("input[name='CustomerGender']:checked").val(),
+            CustomerBirthDate: $("#CustomerBirthDate").val(),
+            CustomerBirthCity: $("#cities").val()
+        };
+
+        $.ajax({
+            url: '/Customer/CalculateFiscalCode',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify(customer),
+            success: (data) => {
+                console.log(data)
+                if (data.fiscalCode) {
+                    $("#CustomerFiscalCode").val(data.fiscalCode);
+                } else {
+                    alert("Errore nel calcolo del codice fiscale");
+                }
+            },
+            error: (xhr, status, error) => {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    alert('Errore durante il calcolo del codice fiscale: ' + xhr.responseJSON.errors.join(", "));
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert('Errore durante il calcolo del codice fiscale: ' + xhr.responseJSON.message);
+                } else {
+                    console.error('Errore durante il calcolo del codice fiscale: ', status, error);
+                }
+            }
+        });
+    });
+
+</script>

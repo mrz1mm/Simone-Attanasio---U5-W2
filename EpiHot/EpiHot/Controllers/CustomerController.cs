@@ -52,7 +52,23 @@ namespace EpiHot.Controllers
                 return RedirectToAction("AddCustomerPartial");
             }
 
-            _customerSvc.AddCustomer(customerDto);
+            var city = _citySvc.GetCityById(int.Parse(customerDto.CustomerBirthCity));
+            var newCustomer = new CustomerDto
+            {
+                CustomerName = customerDto.CustomerName,
+                CustomerSurname = customerDto.CustomerSurname,
+                CustomerBirthDate = customerDto.CustomerBirthDate,
+                CustomerBirthCity = city.Name,
+                CustomerGender = customerDto.CustomerGender,
+                CustomerFiscalCode = customerDto.CustomerFiscalCode,
+                CustomerAddress = customerDto.CustomerAddress,
+                CustomerCity = customerDto.CustomerCity,
+                CustomerEmail = customerDto.CustomerEmail,
+                CustomerHomePhone = customerDto.CustomerHomePhone,
+                CustomerMobilePhone = customerDto.CustomerMobilePhone
+            };
+
+            _customerSvc.AddCustomer(newCustomer);
 
             TempData["Success"] = "Cliente aggiunto";
             return RedirectToAction("Index", "Customer");
@@ -80,8 +96,20 @@ namespace EpiHot.Controllers
             return Json(new { success = true });
         }
 
+        public IActionResult GetProvinces()
+        {
+            var provinces = _citySvc.GetProvinces();
+            return Json(provinces);
+        }
+
+        public IActionResult GetCities(string province)
+        {
+            var cities = _citySvc.GetByProvince(province);
+            return Json(cities);
+        }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [AutoValidateAntiforgeryToken]
         public IActionResult CalculateFiscalCode([FromBody] FiscalCodeDto1 customer)
         {
             if (!ModelState.IsValid)

@@ -36,7 +36,7 @@ namespace EpiHot.Services
                                     CustomerSurname = reader.GetString(2),
                                     CustomerBirthDate = DateOnly.FromDateTime(reader.GetDateTime(3)),
                                     CustomerBirthCity = reader.GetString(4),
-                                    CustomerGender = (Gender)Enum.Parse(typeof(Gender), reader.GetChar(5).ToString()),
+                                    CustomerGender = (Gender)Enum.Parse(typeof(Gender), reader.GetString(5)[0].ToString()),
                                     CustomerFiscalCode = reader.GetString(6),
                                     CustomerAddress = reader.GetString(7),
                                     CustomerCity = reader.GetString(8),
@@ -116,7 +116,7 @@ namespace EpiHot.Services
                         cmd.Parameters.AddWithValue("@CustomerSurname", customerDto.CustomerSurname);
                         cmd.Parameters.AddWithValue("@CustomerBirthDate", customerDto.CustomerBirthDate.ToDateTime(TimeOnly.MinValue));
                         cmd.Parameters.AddWithValue("@CustomerBirthCity", customerDto.CustomerBirthCity);
-                        cmd.Parameters.AddWithValue("@CustomerGender", customerDto.CustomerGender);
+                        cmd.Parameters.AddWithValue("@CustomerGender", customerDto.CustomerGender.ToString());
                         cmd.Parameters.AddWithValue("@CustomerFiscalCode", customerDto.CustomerFiscalCode);
                         cmd.Parameters.AddWithValue("@CustomerAddress", customerDto.CustomerAddress);
                         cmd.Parameters.AddWithValue("@CustomerCity", customerDto.CustomerCity);
@@ -149,7 +149,7 @@ namespace EpiHot.Services
                         cmd.Parameters.AddWithValue("@CustomerSurname", customer.CustomerSurname);
                         cmd.Parameters.AddWithValue("@CustomerBirthDate", customer.CustomerBirthDate.ToDateTime(TimeOnly.MinValue));
                         cmd.Parameters.AddWithValue("@CustomerBirthCity", customer.CustomerBirthCity);
-                        cmd.Parameters.AddWithValue("@CustomerGender", customer.CustomerGender);
+                        cmd.Parameters.AddWithValue("@CustomerGender", customer.CustomerGender.ToString());
                         cmd.Parameters.AddWithValue("@CustomerFiscalCode", customer.CustomerFiscalCode);
                         cmd.Parameters.AddWithValue("@CustomerAddress", customer.CustomerAddress);
                         cmd.Parameters.AddWithValue("@CustomerCity", customer.CustomerCity);
