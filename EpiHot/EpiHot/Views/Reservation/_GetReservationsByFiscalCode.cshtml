@@ -1,12 +1,10 @@
 ﻿@model List<EpiHot.Models.Dto.ReservationByFiscalCodeDto>
 
-<form id="fiscalCodeForm">
-    <div class="form-group">
-        <label for="fiscalCode">Codice Fiscale</label>
-        <input type="text" class="form-control" id="fiscalCode" name="fiscalCode" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Cerca</button>
-</form>
+<div class="form-group">
+    <label for="fiscalCode">Codice Fiscale</label>
+    <input type="text" class="form-control" id="fiscalCode" name="fiscalCode" required>
+</div>
+<button type="button" class="btn btn-primary">Cerca</button>
 
 <div id="fiscalCodeResults">
     @if (Model != null && Model.Any())
@@ -53,24 +51,21 @@
     }
 </div>
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#fiscalCodeForm').submit(function (e) {
-                e.preventDefault();
-                var fiscalCode = $('#fiscalCode').val();
-                $.ajax({
-                    url: '@Url.Action("GetReservationsByFiscalCode", "Reservation")',
-                    type: 'GET',
-                    data: { fiscalCode: fiscalCode },
-                    success: function (result) {
-                        $('#fiscalCodeResults').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Errore durante la ricerca delle prenotazioni: ', status, error);
-                    }
-                });
+<script>
+    $(document).ready(function () {
+        $('button').click(function () {
+            var fiscalCode = $('#fiscalCode').val();
+            $.ajax({
+                url: '@Url.Action("GetReservationsByFiscalCode", "Reservation")',
+                type: 'GET',
+                data: { fiscalCode: fiscalCode },
+                success: function (result) {
+                    $('#fiscalCodeResults').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Errore durante la ricerca delle prenotazioni: ', status, error);
+                }
             });
         });
-    </script>
-}
+    });
+</script>

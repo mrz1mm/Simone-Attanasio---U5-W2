@@ -5,7 +5,7 @@
 <form asp-action="AddServiceToReservation" method="post">
     <div class="form-group">
         <label for="ReservationId">Seleziona Prenotazione</label>
-        <select asp-for="ReservationService.ReservationId" class="form-control" asp-items="@(new SelectList(Model.Reservations, "ReservationId", "ReservationNumber"))">
+        <select asp-for="ReservationService.ReservationId" class="form-control" asp-items="@(new SelectList(Model.Reservations, "ReservationId", "ReservationNumber", Model.ReservationService.ReservationId))">
             <option value="">Seleziona una prenotazione</option>
         </select>
     </div>
@@ -16,8 +16,9 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="ServiceDate">Data del Servizio</label>
-        <input type="date" asp-for="ReservationService.ServiceDate" class="form-control" />
+        <label for="ServiceDate">Data e Ora del Servizio</label>
+        <input type="datetime-local" asp-for="ReservationService.ServiceDate" class="form-control"
+               value="@Model.ReservationService.ServiceDate.ToString("yyyy-MM-ddTHH:mm")" />
     </div>
     <div class="form-group">
         <label for="ServiceQuantity">Quantità</label>
@@ -25,7 +26,7 @@
     </div>
     <div class="form-group">
         <label for="ServicePrice">Prezzo</label>
-        <input type="text" asp-for="ReservationService.ServicePrice" class="form-control" />
+        <input type="number" asp-for="ReservationService.ServicePrice" class="form-control" step="0.01" />
     </div>
     <button type="submit" class="btn btn-primary mt-3">Aggiungi</button>
 </form>

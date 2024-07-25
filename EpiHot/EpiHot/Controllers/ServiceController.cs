@@ -14,7 +14,6 @@ namespace EpiHot.Controllers
             _serviceSvc = serviceSvc;
             _reservationSvc = reservationSvc;
         }
-
         public IActionResult Index()
         {
             var services = _serviceSvc.GetServices();
@@ -32,7 +31,7 @@ namespace EpiHot.Controllers
             return PartialView("~/Views/Service/_AddService.cshtml");
         }
 
-        public IActionResult AddServiceToReservationPartial()
+        public IActionResult AddServiceToReservationPartial(int? reservationId)
         {
             var reservations = _reservationSvc.GetReservations();
             var services = _serviceSvc.GetServices();
@@ -42,23 +41,40 @@ namespace EpiHot.Controllers
                 Services = services,
                 ReservationService = new ReservationServiceDto()
             };
+
+            if (reservationId.HasValue)
+            {
+                model.ReservationService.ReservationId = reservationId.Value;
+            }
+
             return PartialView("~/Views/Service/_AddServiceToReservation.cshtml", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddServiceToReservation([Bind("ReservationId, ServiceId, ServiceDate, ServiceQuantity, ServicePrice")] ReservationServiceMW model)
+        public IActionResult AddServiceToReservation(ReservationServiceMW model)
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "Errore nei dati inseriti";
-                return RedirectToAction("Index", "Service");
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                TempData["Error"] = "Errore nei dati inseriti: " + string.Join("; ", errors);
+                return RedirectToAction("AddServiceToReservationPartial");
             }
 
-            _serviceSvc.AddServiceToReservation(model.ReservationService);
+            if (model.ReservationService != null)
+            {
+                _serviceSvc.AddServiceToReservation(model.ReservationService);
+            }
+            else
+            {
+                TempData["Error"] = "Errore nel passaggio dei dati.";
+                return RedirectToAction("AddServiceToReservationPartial");
+            }
 
             TempData["Success"] = "Servizio aggiunto alla prenotazione";
             return RedirectToAction("Index", "Service");
         }
+
+
     }
 }

@@ -1,9 +1,5 @@
 ﻿@model EpiHot.Models.Dto.CustomerDto
 
-<!--
-
--->
-
 <h2>Aggiungi nuovo cliente</h2>
 <form asp-action="AddCustomer" asp-controller="Customer" method="post">
     <!-- Nome -->
@@ -75,10 +71,6 @@
     <button type="submit" class="btn btn-primary mt-3">Salva</button>
 </form>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
     <script>
         function loadCities() {
             let province = $("#provinces").val()
@@ -99,6 +91,7 @@
                 url: '@Url.Action("GetProvinces", "Customer")',
                 method: 'get',
                 success: (data) => {
+                    console.log(data)
                     $(data).each((_, p) => {
                         $('<option>').text(p.name).val(p.acronym).appendTo($("#provinces"))
                     })
@@ -108,4 +101,3 @@
             $("#provinces").change(() => loadCities())
         })
     </script>
-}

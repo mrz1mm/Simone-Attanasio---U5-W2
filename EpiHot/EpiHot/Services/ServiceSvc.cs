@@ -107,7 +107,7 @@ namespace EpiHot.Services
                 {
                     conn.Open();
                     const string INSERT_COMMAND = @"
-                    INSERT INTO ReservationServices 
+                    INSERT INTO ReservationsServices 
                     (ReservationId, ServiceId, ServiceDate, ServiceQuantity, ServicePrice) 
                     VALUES (@ReservationId, @ServiceId, @ServiceDate, @ServiceQuantity, @ServicePrice)";
                     using (SqlCommand cmd = new SqlCommand(INSERT_COMMAND, conn))
@@ -126,6 +126,9 @@ namespace EpiHot.Services
                 throw new Exception("Errore nell'aggiunta del servizio alla prenotazione", ex);
             }
         }
+
+
+
 
         public void UpdateService(Service service)
         {

@@ -14,7 +14,7 @@
             <th>Prezzo</th>
             <th>Tipo di soggiorno</th>
             <th>Prezzo tipo di soggiorno</th>
-            <th>Aggiungi servizio</th>
+            <th>Azioni</th>
         </tr>
     </thead>
     <tbody>
@@ -31,14 +31,11 @@
                 <td>@reservation.ReservationPrice</td>
                 <td>@reservation.ReservationType.ToString()</td>
                 <td>@reservation.ReservationTypePrice</td>
-                <td><i class="bi bi-plus-square"></i></td>
+                <td class="d-flex flex-column">
+                    <a href="@Url.Action("AddServiceToReservationPartial", "Service", new { reservationId = reservation.ReservationId })">Aggiungi servizio</a>
+                    <a href="#">Checkout</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
-
-@section Scripts {
-<script>
-
-</script>
-}
