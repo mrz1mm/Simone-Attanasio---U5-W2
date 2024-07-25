@@ -14,11 +14,36 @@
     @Html.Partial("~/Views/Service/_GetServices.cshtml", Model)
 </div>
 
+@section Scripts {
 <script>
+    $(document).ready(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var reservationId = urlParams.get('reservationId');
+        if (reservationId) {
+            loadAddServiceToReservationPartial(reservationId);
+        } else {
+            loadPartialView('GetServicesPartial');
+        }
+    });
+
     function loadPartialView(action) {
         $.ajax({
             url: '@Url.Action()/' + action,
             type: 'GET',
+            success: function (result) {
+                $('#partialContainer').html(result);
+            },
+            error: function (xhr, status, error) {
+                console.error('Errore durante il caricamento della partial view: ', status, error);
+            }
+        });
+    }
+
+    function loadAddServiceToReservationPartial(reservationId) {
+        $.ajax({
+            url: '@Url.Action("AddServiceToReservationPartial", "Service")',
+            type: 'GET',
+            data: { reservationId: reservationId },
             success: function (result) {
                 $('#partialContainer').html(result);
             },
@@ -65,4 +90,5 @@
         });
     }
 </script>
+}
 

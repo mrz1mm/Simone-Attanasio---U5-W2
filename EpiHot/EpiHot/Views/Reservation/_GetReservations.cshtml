@@ -30,7 +30,7 @@
                 <td>@reservation.ReservationPrice</td>
                 <td>@reservation.ReservationType.ToString()</td>
                 <td class="d-flex flex-column">
-                    <a href="@Url.Action("AddServiceToReservationPartial", "Service", new { reservationId = reservation.ReservationId })">Aggiungi servizio</a>
+                    <a href="@Url.Action("Index", "Service", new { reservationId = reservation.ReservationId })">Aggiungi servizio</a>
                     <a href="#">Checkout</a>
                 </td>
                 <td>
@@ -73,6 +73,3 @@
         </div>
     </div>
 </div>
-
-<script>
-</script>

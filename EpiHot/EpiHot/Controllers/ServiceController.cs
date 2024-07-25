@@ -40,21 +40,13 @@ namespace EpiHot.Controllers
 
         public IActionResult AddServiceToReservationPartial(int? reservationId)
         {
-            var reservations = _reservationSvc.GetReservations();
-            var services = _serviceSvc.GetServices();
             var model = new AddReservationServiceMW
             {
-                Reservations = reservations,
-                Services = services,
-                ReservationService = new ReservationServiceDto()
+                ReservationService = new ReservationServiceDto { ReservationId = reservationId ?? 0 },
+                Reservations = _reservationSvc.GetReservations(),
+                Services = _serviceSvc.GetServices()
             };
-
-            if (reservationId.HasValue)
-            {
-                model.ReservationService.ReservationId = reservationId.Value;
-            }
-
-            return PartialView("~/Views/Service/_AddServiceToReservation.cshtml", model);
+            return PartialView("_AddServiceToReservation", model);
         }
 
         [HttpPost]
