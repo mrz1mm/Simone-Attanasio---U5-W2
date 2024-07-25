@@ -1,4 +1,5 @@
-﻿using EpiHot.Models.Dto;
+﻿using EpiHot.Models;
+using EpiHot.Models.Dto;
 using EpiHot.Models.MW;
 using EpiHot.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -66,6 +67,36 @@ namespace EpiHot.Controllers
             return RedirectToAction("Index", "Service");
         }
 
+        public IActionResult AddService(ServiceDto serviceDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Errore nei dati inseriti";
+                return RedirectToAction("AddServicePartial");
+            }
 
+            _serviceSvc.AddService(serviceDto);
+
+            TempData["Success"] = "Servizio aggiunto";
+            return RedirectToAction("Index", "Service");
+        }
+
+        public IActionResult UpdateService(Service service)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Errore nei dati inseriti";
+                return RedirectToAction("AddServicePartial");
+            }
+
+            _serviceSvc.UpdateService(service);
+            return RedirectToAction("Index", "Service");
+        }
+
+        public IActionResult DeleteService(int serviceId)
+        {
+            _serviceSvc.DeleteService(serviceId);
+            return RedirectToAction("Index", "Service");
+        }
     }
 }

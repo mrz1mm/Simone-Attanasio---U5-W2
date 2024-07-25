@@ -12,7 +12,43 @@
         {
             <tr>
                 <td>@service.ServiceType</td>
+                <td>
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-warning btn-sm btnUpdate me-1" data-id="@service.ServiceId" data-type="@service.ServiceType">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm btnDelete" data-id="@service.ServiceId">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
+<!-- Modale di Conferma Eliminazione -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Conferma Cancellazione</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Sei sicuro di voler cancellare questa prenotazione?
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("DeleteReservation", "Reservation", FormMethod.Post, new { id = "deleteReservationForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="deleteReservationId" value="" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+                    <input type="submit" class="btn btn-danger" value="Conferma" />
+                }
+            </div>
+        </div>
+    </div>
+</div>

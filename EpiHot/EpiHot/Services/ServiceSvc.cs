@@ -127,9 +127,6 @@ namespace EpiHot.Services
             }
         }
 
-
-
-
         public void UpdateService(Service service)
         {
             try
