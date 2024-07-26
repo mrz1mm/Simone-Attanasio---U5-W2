@@ -4,61 +4,55 @@
     <label for="fiscalCode">Codice Fiscale</label>
     <input type="text" class="form-control" id="fiscalCode" name="fiscalCode" required>
 </div>
-<button type="button" class="btn btn-primary">Cerca</button>
+<button type="button" class="btn btn-primary" id="searchButton">Cerca</button>
 
-<div id="fiscalCodeResults">
-    @if (Model != null && Model.Any())
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ReservationId</th>
-                    <th>CustomerFiscalCode</th>
-                    <th>RoomNumber</th>
-                    <th>ReservationNumber</th>
-                    <th>ReservationDate</th>
-                    <th>ReservationStartStayDate</th>
-                    <th>ReservationEndStayDate</th>
-                    <th>ReservationDeposit</th>
-                    <th>ReservationPrice</th>
-                    <th>ReservationType</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var reservation in Model)
-                {
-                    <tr>
-                        <td>@reservation.ReservationId</td>
-                        <td>@reservation.CustomerFiscalCode</td>
-                        <td>@reservation.RoomNumber</td>
-                        <td>@reservation.ReservationNumber</td>
-                        <td>@reservation.ReservationDate.ToString("dd/MM/yyyy")</td>
-                        <td>@reservation.ReservationStartStayDate.ToString("dd/MM/yyyy")</td>
-                        <td>@reservation.ReservationEndStayDate.ToString("dd/MM/yyyy")</td>
-                        <td>@reservation.ReservationDeposit</td>
-                        <td>@reservation.ReservationPrice</td>
-                        <td>@reservation.ReservationType</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>Nessuna prenotazione trovata per il codice fiscale inserito.</p>
-    }
-</div>
+<div id="fiscalCodeResults"></div>
 
 <script>
     $(document).ready(function () {
-        $('button').click(function () {
+        $('#searchButton').click(function () {
             var fiscalCode = $('#fiscalCode').val();
             $.ajax({
                 url: '@Url.Action("GetReservationsByFiscalCode", "Reservation")',
                 type: 'GET',
                 data: { fiscalCode: fiscalCode },
                 success: function (result) {
-                    $('#fiscalCodeResults').html(result);
+                    var html = '';
+                    if (result.length > 0) {
+                        html += '<h2>Elenco Prenotazioni</h2>';
+                        html += '<table class="table"><thead><tr>';
+                        html += '<th>Codice Fiscale</th><th>Numero stanza</th><th>Numero prenotazione</th><th>Data di prenotazione</th><th>Data di inizio soggiorno</th><th>Data di fine soggiorno</th><th>Caparra</th><th>Prezzo</th><th>Tipo di soggiorno</th><th>Configura</th><th>Azioni</th>';
+                        html += '</tr></thead><tbody>';
+                        $.each(result, function (index, reservation) {
+                            html += '<tr>';
+                            html += '<td>' + reservation.customerFiscalCode + '</td>';
+                            html += '<td>' + reservation.roomNumber + '</td>';
+                            html += '<td>' + reservation.reservationNumber + '</td>';
+                            html += '<td>' + new Date(reservation.reservationDate).toLocaleDateString() + '</td>';
+                            html += '<td>' + new Date(reservation.reservationStartStayDate).toLocaleDateString() + '</td>';
+                            html += '<td>' + new Date(reservation.reservationEndStayDate).toLocaleDateString() + '</td>';
+                            html += '<td>' + reservation.reservationDeposit + '</td>';
+                            html += '<td>' + reservation.reservationPrice + '</td>';
+                            html += '<td>' + reservation.reservationType + '</td>';
+                            html += '<td class="d-flex flex-column">';
+                            html += '<a href="' + '@Url.Action("Index", "Service")' + '?reservationId=' + reservation.reservationId + '">Aggiungi servizio</a>';
+                            html += '<a href="' + '@Url.Action("Index", "Checkout")' + '?reservationId=' + reservation.reservationId + '">Checkout</a>';
+                            html += '</td>';
+                            html += '<td><div class="d-flex">';
+                            html += '<button type="button" class="btn btn-warning btn-sm me-1" data-id="' + reservation.reservationId + '" onclick="loadUpdateReservationPartial(' + reservation.reservationId + ')">';
+                            html += '<i class="fas fa-edit"></i>';
+                            html += '</button>';
+                            html += '<button type="button" class="btn btn-danger btn-sm" data-id="' + reservation.reservationId + '" onclick="deleteReservation(' + reservation.reservationId + ')">';
+                            html += '<i class="fas fa-trash"></i>';
+                            html += '</button>';
+                            html += '</div></td>';
+                            html += '</tr>';
+                        });
+                        html += '</tbody></table>';
+                    } else {
+                        html = '<p>Nessuna prenotazione trovata per il codice fiscale inserito.</p>';
+                    }
+                    $('#fiscalCodeResults').html(html);
                 },
                 error: function (xhr, status, error) {
                     console.error('Errore durante la ricerca delle prenotazioni: ', status, error);

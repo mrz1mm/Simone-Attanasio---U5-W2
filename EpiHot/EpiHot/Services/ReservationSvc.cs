@@ -161,24 +161,26 @@ namespace EpiHot.Services
                 {
                     conn.Open();
                     const string SELECT_ALL_CMD = @"
-                    SELECT r.ReservationId,
-                           c.CustomerFiscalCode,
-                           rm.RoomNumber,
-                           r.ReservationNumber,
-                           r.ReservationDate,
-                           r.ReservationStartStayDate,
-                           r.ReservationEndStayDate,
-                           r.ReservationDeposit,
-                           r.ReservationPrice,
-                           r.ReservationType
-                    FROM Reservations r
-                        JOIN Customers c
-                            ON r.CustomerId = c.CustomerId
-                        JOIN Rooms rm
-                            ON r.RoomId = rm.RoomId";
+            SELECT r.ReservationId,
+                   c.CustomerFiscalCode,
+                   rm.RoomNumber,
+                   r.ReservationNumber,
+                   r.ReservationDate,
+                   r.ReservationStartStayDate,
+                   r.ReservationEndStayDate,
+                   r.ReservationDeposit,
+                   r.ReservationPrice,
+                   r.ReservationType
+            FROM Reservations r
+                JOIN Customers c
+                    ON r.CustomerId = c.CustomerId
+                JOIN Rooms rm
+                    ON r.RoomId = rm.RoomId
+            WHERE c.CustomerFiscalCode = @FiscalCode";
 
                     using (SqlCommand cmd = new SqlCommand(SELECT_ALL_CMD, conn))
                     {
+                        cmd.Parameters.AddWithValue("@FiscalCode", fiscalCode);
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())

@@ -35,20 +35,13 @@ namespace EpiHot.Controllers
 
         public IActionResult GetReservationsByFiscalCodePartial()
         {
-            return PartialView("~/Views/Reservation/_GetReservationsByFiscalCode.cshtml");
+            return PartialView("~/Views/Reservation/_GetReservationsByFiscalCode.cshtml", new List<ReservationByFiscalCodeDto>());
         }
 
         public IActionResult GetReservationsByFullBoardPartial()
         {
             var reservations = _reservationSvc.GetReservationsByFullBoard();
             return PartialView("~/Views/Reservation/_GetReservationsByFullBoard.cshtml", reservations);
-        }
-
-        [HttpGet]
-        public IActionResult GetReservationsByFiscalCode(string fiscalCode)
-        {
-            var reservations = _reservationSvc.GetReservationsByFiscalCode(fiscalCode);
-            return PartialView("_ReservationsByFiscalCodeResults", reservations);
         }
 
         public IActionResult AddReservationPartial()
@@ -89,6 +82,12 @@ namespace EpiHot.Controllers
             return PartialView("~/Views/Reservation/_UpdateReservation.cshtml", model);
         }
 
+        [HttpGet]
+        public IActionResult GetReservationsByFiscalCode(string fiscalCode)
+        {
+            var reservations = _reservationSvc.GetReservationsByFiscalCode(fiscalCode);
+            return Json(reservations);  // Restituisce i dati in formato JSON
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
