@@ -5,7 +5,6 @@ using System.Diagnostics;
 
 namespace EpiHot.Controllers
 {
-    [Authorize(Policy = Policies.User)]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

@@ -13,3 +13,13 @@
         <a class="btn btn-success btn-lg" asp-area="" asp-controller="Service" asp-action="Index" role="button">Gestisci Servizi</a>
     </div>
 </div>
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="container mt-5">
+        <h2 class="display-6">Sezione Amministratore</h2>
+        <p class="lead">Solo gli amministratori possono vedere questa sezione.</p>
+        <hr class="my-4">
+        <a class="btn btn-warning btn-lg" asp-area="" asp-controller="Auth" asp-action="Register" role="button">Registra Utente</a>
+    </div>
+}

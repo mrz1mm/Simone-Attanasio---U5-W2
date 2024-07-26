@@ -28,8 +28,8 @@ namespace EpiHot
             .Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
-                options.LoginPath = "/Auth";
-                options.AccessDeniedPath = "/Auth";
+                options.LoginPath = "/Auth/Login";
+                options.AccessDeniedPath = "/Home";
             });
 
             builder.Services
