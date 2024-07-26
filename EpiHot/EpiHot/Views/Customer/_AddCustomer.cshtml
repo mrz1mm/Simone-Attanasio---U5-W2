@@ -4,22 +4,22 @@
 <form asp-action="AddCustomer" asp-controller="Customer" method="post">
     <!-- Nome -->
     <div class="form-group">
-        <label asp-for="CustomerName"></label>
+        <label asp-for="CustomerName">Nome</label>
         <input asp-for="CustomerName" class="form-control" id="CustomerName" />
     </div>
     <!-- Cognome -->
     <div class="form-group">
-        <label asp-for="CustomerSurname"></label>
+        <label asp-for="CustomerSurname">Cognome</label>
         <input asp-for="CustomerSurname" class="form-control" id="CustomerSurname" />
     </div>
     <!-- Data di nascita -->
     <div class="form-group">
-        <label asp-for="CustomerBirthDate"></label>
+        <label asp-for="CustomerBirthDate">Data di nascita</label>
         <input asp-for="CustomerBirthDate" class="form-control" type="date" id="CustomerBirthDate" />
     </div>
     <!-- Genere -->
     <div class="form-group">
-        <label asp-for="CustomerGender" class="control-label"></label>
+        <label asp-for="CustomerGender" class="control-label">Sesso</label>
         <input value="M" type="radio" asp-for="CustomerGender" name="CustomerGender" class="form-check-input" id="CustomerGenderM" />
         <label class="form-check-label">M</label>
         <input value="F" type="radio" asp-for="CustomerGender" name="CustomerGender" class="form-check-input" id="CustomerGenderF" />
@@ -28,7 +28,7 @@
     </div>
     <!-- Città di nascita -->
     <div class="form-group">
-        <label asp-for="CustomerBirthCity" class="control-label"></label>
+        <label asp-for="CustomerBirthCity" class="control-label">Luogo di nascita</label>
         <div class="row">
             <div class="col-5">
                 <select id="provinces" class="form-select"></select>
@@ -40,7 +40,7 @@
     </div>
     <!-- Codice fiscale -->
     <div class="form-group">
-        <label asp-for="CustomerFiscalCode"></label>
+        <label asp-for="CustomerFiscalCode">Codice Fiscale</label>
         <div class="d-flex">
             <button type="button" id="generateFiscalCode" class="btn btn-success me-3">Genera</button>
             <input asp-for="CustomerFiscalCode" class="form-control" id="CustomerFiscalCode" />
@@ -48,27 +48,27 @@
     </div>
     <!-- Indirizzo di residenza -->
     <div class="form-group">
-        <label asp-for="CustomerAddress"></label>
+        <label asp-for="CustomerAddress">Indirizzo di residenza</label>
         <input asp-for="CustomerAddress" class="form-control" id="CustomerAddress" />
     </div>
     <!-- Città di residenza -->
     <div class="form-group">
-        <label asp-for="CustomerCity"></label>
+        <label asp-for="CustomerCity">Città di residenza</label>
         <input asp-for="CustomerCity" class="form-control" id="CustomerCity" />
     </div>
     <!-- Email -->
     <div class="form-group">
-        <label asp-for="CustomerEmail"></label>
+        <label asp-for="CustomerEmail">Email</label>
         <input asp-for="CustomerEmail" class="form-control" type="email" id="CustomerEmail" />
     </div>
     <!-- Telefono fisso -->
     <div class="form-group">
-        <label asp-for="CustomerHomePhone"></label>
+        <label asp-for="CustomerHomePhone">Telefono fisso</label>
         <input asp-for="CustomerHomePhone" class="form-control" id="CustomerHomePhone" />
     </div>
     <!-- Telefono cellulare -->
     <div class="form-group">
-        <label asp-for="CustomerMobilePhone"></label>
+        <label asp-for="CustomerMobilePhone">Cellulare</label>
         <input asp-for="CustomerMobilePhone" class="form-control" id="CustomerMobilePhone" />
     </div>
     <button type="submit" class="btn btn-primary mt-3">Salva</button>

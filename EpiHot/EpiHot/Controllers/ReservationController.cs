@@ -92,7 +92,7 @@ namespace EpiHot.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddReservation(Models.MW.AddReservationMW model)
+        public IActionResult AddReservation(AddReservationMW model)
         {
             if (!ModelState.IsValid)
             {

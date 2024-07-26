@@ -57,7 +57,7 @@ namespace EpiHot.Controllers
         }
 
 
-        public IActionResult AddService(ServiceDto serviceDto)
+        public IActionResult AddService([Bind("ServiceType")] ServiceDto serviceDto)
         {
             if (!ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace EpiHot.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateService(Service service)
+        public IActionResult UpdateService([Bind("ServiceId, ServiceType")] Service service)
         {
             if (!ModelState.IsValid)
             {
