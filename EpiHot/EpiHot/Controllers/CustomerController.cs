@@ -46,7 +46,7 @@ namespace EpiHot.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddCustomer(CustomerDto customerDto)
+        public IActionResult AddCustomer([Bind("CustomerName, CustomerSurname, CustomerBirthDate, CustomerGender, CustomerBirthCity, CustomerFiscalCode, CustomerAddress, CustomerCity, CustomerEmail, CustomerHomePhone, CustomerMobilePhone")] CustomerDto customerDto)
         {
             if (!ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace EpiHot.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateCustomer(Customer customer)
+        public IActionResult UpdateCustomer([Bind("CustomerId, CustomerName, CustomerSurname, CustomerBirthDate, CustomerBirthCity, CustomerGender, CustomerFiscalCode, CustomerAddress, CustomerCity, CustomerEmail, CustomerHomePhone, CustomerMobilePhone")] Customer customer)
         {
             if (!ModelState.IsValid)
             {
