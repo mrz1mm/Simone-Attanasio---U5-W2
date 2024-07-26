@@ -22,6 +22,11 @@ namespace EpiHot.Services
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
             };
 
+            foreach (var role in user.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
             var claimsIdentity = new ClaimsIdentity(
                 claims,
                 CookieAuthenticationDefaults.AuthenticationScheme

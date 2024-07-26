@@ -1,5 +1,6 @@
 using EpiHot.Services;
 using InputValidation.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace EpiHot
 {
@@ -22,6 +23,22 @@ namespace EpiHot
                 .AddScoped<RoomSvc>()
                 .AddScoped<ServiceSvc>()
                 .AddScoped<UserSvc>();
+
+            builder
+            .Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Auth";
+                options.AccessDeniedPath = "/Auth";
+            });
+
+            builder.Services
+            .AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.Admin, policy => policy.RequireRole("Admin"));
+                options.AddPolicy(Policies.User, policy => policy.RequireRole("User"));
+
+            });
 
             var app = builder.Build();
 

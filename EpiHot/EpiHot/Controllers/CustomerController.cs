@@ -2,10 +2,12 @@
 using EpiHot.Models.Dto;
 using EpiHot.Services;
 using InputValidation.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EpiHot.Controllers
 {
+    [Authorize(Policy = Policies.User)]
     public class CustomerController : Controller
     {
         private readonly FiscalCodeSvc _fiscalCodeSvc;
