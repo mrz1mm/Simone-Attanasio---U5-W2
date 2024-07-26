@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EpiHot.Models.Dto
+﻿namespace EpiHot.Models.Dto
 {
     public class ServiceDto
     {
