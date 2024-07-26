@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace EpiHot.Services
 {
-    public class AuthSvc
+    public class AuthSvc : IAuthSvc
     {
         private readonly IHttpContextAccessor _http;
 

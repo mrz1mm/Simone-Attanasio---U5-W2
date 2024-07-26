@@ -2,7 +2,7 @@
 
 namespace InputValidation.Services
 {
-    public class CsvCitySvc
+    public class CsvCitySvc : ICsvCitySvc
     {
         private readonly List<City> _cityList = [];
 

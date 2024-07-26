@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace EpiHot.Services
 {
-    public class CheckoutSvc
+    public class CheckoutSvc : ICheckoutSvc
     {
         private readonly IConfiguration _config;
 

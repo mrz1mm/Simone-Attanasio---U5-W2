@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace EpiHot.Services
 {
-    public class CustomerSvc
+    public class CustomerSvc : ICustomerSvc
     {
         private readonly IConfiguration _config;
         public CustomerSvc(IConfiguration config)

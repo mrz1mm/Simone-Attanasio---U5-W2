@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace EpiHot.Services
 {
-    public class RoomSvc
+    public class RoomSvc : IRoomSvc
     {
         private readonly IConfiguration _config;
         public RoomSvc(IConfiguration config)

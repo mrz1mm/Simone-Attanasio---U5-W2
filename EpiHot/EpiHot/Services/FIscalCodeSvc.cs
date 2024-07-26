@@ -3,7 +3,7 @@ using EpiHot.Models.Dto;
 
 namespace EpiHot.Services
 {
-    public class FiscalCodeSvc
+    public class FiscalCodeSvc : IFiscalCodeSvc
     {
         public string CalculateFiscalCode(FiscalCodeDto2 data)
         {

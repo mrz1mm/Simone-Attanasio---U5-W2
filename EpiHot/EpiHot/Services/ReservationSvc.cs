@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 namespace EpiHot.Services
 {
-    public class ReservationSvc
+    public class ReservationSvc : IReservationSvc
     {
         private readonly IConfiguration _config;
         public ReservationSvc(IConfiguration config)
