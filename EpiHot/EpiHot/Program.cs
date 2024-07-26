@@ -1,6 +1,7 @@
 using EpiHot.Services;
 using InputValidation.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace EpiHot
 {
@@ -37,8 +38,13 @@ namespace EpiHot
             {
                 options.AddPolicy(Policies.Admin, policy => policy.RequireRole("Admin"));
                 options.AddPolicy(Policies.User, policy => policy.RequireRole("User"));
-
+                options.AddPolicy("UserOrAdmin", policy =>
+                    policy.RequireAssertion(context =>
+                        context.User.HasClaim(c =>
+                            (c.Type == ClaimTypes.Role && c.Value == "User") ||
+                            (c.Type == ClaimTypes.Role && c.Value == "Admin"))));
             });
+
 
             var app = builder.Build();
 

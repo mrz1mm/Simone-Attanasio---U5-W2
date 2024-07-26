@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EpiHot.Controllers
 {
-    [Authorize(Policy = Policies.User)]
+    [Authorize(Policy = "UserOrAdmin")]
+
     public class ReservationController : Controller
     {
         private readonly ReservationSvc _reservationSvc;

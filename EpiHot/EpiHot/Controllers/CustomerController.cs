@@ -8,7 +8,8 @@ using Newtonsoft.Json;
 
 namespace EpiHot.Controllers
 {
-    [Authorize(Policy = Policies.User)]
+    [Authorize(Policy = "UserOrAdmin")]
+
     public class CustomerController : Controller
     {
         private readonly FiscalCodeSvc _fiscalCodeSvc;
