@@ -11,8 +11,10 @@ namespace EpiHot.Services
             string surnameCode = CalculateSurname(data.CustomerSurname);
             // Calcolo del cognome
             string nameCode = CalculateName(data.CustomerName);
+            // Conversione del genere da stringa a enum Gender
+            Gender gender = data.CustomerGender == "M" ? Gender.M : Gender.F;
             // Calcolo della data di nascita
-            string birthDateCode = CalculateBirthDate(data.CustomerBirthDate, data.CustomerGender);
+            string birthDateCode = CalculateBirthDate(data.CustomerBirthDate, gender);
             // Calcolo del codice del comune di nascita
             string birthCityCode = CalculateBirthCity(data.CustomerBirthCity);
             // Calcolo del codice fiscale parziale

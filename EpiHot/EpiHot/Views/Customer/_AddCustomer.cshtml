@@ -106,39 +106,30 @@
         })
     }
 
-    // Genera Codice Fiscale
-    $("#generateFiscalCode").click(() => {
-        const customer = {
-            CustomerName: $("#CustomerName").val(),
-            CustomerSurname: $("#CustomerSurname").val(),
-            CustomerGender: $("input[name='CustomerGender']:checked").val(),
-            CustomerBirthDate: $("#CustomerBirthDate").val(),
-            CustomerBirthCity: $("#cities").val()
-        };
+    // Genera codice fiscale
+    $(document).ready(function () {
+        $('#generateFiscalCode').click(function () {
+            var customerData = {
+                CustomerName: $('#CustomerName').val(),
+                CustomerSurname: $('#CustomerSurname').val(),
+                CustomerGender: $('input[name="CustomerGender"]:checked').val(),
+                CustomerBirthDate: $('#CustomerBirthDate').val(),
+                CustomerBirthCity: $('#cities').val()
+            };
 
-        $.ajax({
-            url: '/Customer/CalculateFiscalCode',
-            method: 'post',
-            contentType: 'application/json',
-            data: JSON.stringify(customer),
-            success: (data) => {
-                console.log(data)
-                if (data.fiscalCode) {
-                    $("#CustomerFiscalCode").val(data.fiscalCode);
-                } else {
-                    alert("Errore nel calcolo del codice fiscale");
+            $.ajax({
+                url: '@Url.Action("CalculateFiscalCode", "Customer")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(customerData),
+                success: function (response) {
+                    $('#CustomerFiscalCode').val(response.fiscalCode);
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText); // Log dell'errore
+                    alert('Errore nel calcolo del codice fiscale: ' + error);
                 }
-            },
-            error: (xhr, status, error) => {
-                if (xhr.responseJSON && xhr.responseJSON.errors) {
-                    alert('Errore durante il calcolo del codice fiscale: ' + xhr.responseJSON.errors.join(", "));
-                } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                    alert('Errore durante il calcolo del codice fiscale: ' + xhr.responseJSON.message);
-                } else {
-                    console.error('Errore durante il calcolo del codice fiscale: ', status, error);
-                }
-            }
+            });
         });
     });
-
 </script>

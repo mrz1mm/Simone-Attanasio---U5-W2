@@ -4,6 +4,7 @@ using EpiHot.Services;
 using InputValidation.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EpiHot.Controllers
 {
@@ -111,31 +112,36 @@ namespace EpiHot.Controllers
         }
 
         [HttpPost]
-        [AutoValidateAntiforgeryToken]
         public IActionResult CalculateFiscalCode([FromBody] FiscalCodeDto1 customer)
         {
+
             if (!ModelState.IsValid)
             {
-                return BadRequest("Per favore, compila tutti i campi");
+                // Log degli errori del ModelState
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                Console.WriteLine($"Errori del ModelState: {string.Join(", ", errors)}");
+
+                return BadRequest(new { message = "Per favore, compila tutti i campi", errors });
             }
 
             try
             {
-                var city = _citySvc.GetCityById(customer.CustomerBirthCity);
+                var city = _citySvc.GetCityById(int.Parse(customer.CustomerBirthCity));
                 var newCustomer = new FiscalCodeDto2
                 {
                     CustomerName = customer.CustomerName,
                     CustomerSurname = customer.CustomerSurname,
                     CustomerGender = customer.CustomerGender,
-                    CustomerBirthDate = customer.CustomerBirthDate,
+                    CustomerBirthDate = DateOnly.Parse(customer.CustomerBirthDate),
                     CustomerBirthCity = city
                 };
                 var fiscalCode = _fiscalCodeSvc.CalculateFiscalCode(newCustomer);
                 return Ok(new { fiscalCode });
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("Errore nel calcolo del codice fiscale");
+                Console.WriteLine($"Exception: {ex}");
+                return BadRequest(new { message = "Errore nel calcolo del codice fiscale", error = ex.Message });
             }
         }
     }

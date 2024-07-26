@@ -4,16 +4,16 @@
     {
         public string CustomerName { get; set; }
         public string CustomerSurname { get; set; }
-        public Gender CustomerGender { get; set; }
-        public DateOnly CustomerBirthDate { get; set; }
-        public int CustomerBirthCity { get; set; }
+        public string CustomerGender { get; set; }
+        public string CustomerBirthDate { get; set; }
+        public string CustomerBirthCity { get; set; }
     }
 
     public class FiscalCodeDto2
     {
         public string CustomerName { get; set; }
         public string CustomerSurname { get; set; }
-        public Gender CustomerGender { get; set; }
+        public string CustomerGender { get; set; }
         public DateOnly CustomerBirthDate { get; set; }
         public City CustomerBirthCity { get; set; }
     }
