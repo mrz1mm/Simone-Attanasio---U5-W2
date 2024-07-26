@@ -13,6 +13,7 @@
             <th>Caparra</th>
             <th>Prezzo</th>
             <th>Tipo di soggiorno</th>
+            <th>Configura</th>
             <th>Azioni</th>
         </tr>
     </thead>
@@ -29,6 +30,10 @@
                 <td>@reservation.ReservationDeposit</td>
                 <td>@reservation.ReservationPrice</td>
                 <td>@reservation.ReservationType.ToString()</td>
+                <td class="d-flex flex-column">
+                    <a href="@Url.Action("Index", "Service", new { reservationId = reservation.ReservationId })">Aggiungi servizio</a>
+                    <a href="@Url.Action("Index", "Checkout", new { reservationId = reservation.ReservationId })">Checkout</a>
+                </td>
                 <td>
                     <div class="d-flex">
                         <button type="button" class="btn btn-warning btn-sm me-1" data-id="@reservation.ReservationId" onclick="loadUpdateReservationPartial(@reservation.ReservationId)">

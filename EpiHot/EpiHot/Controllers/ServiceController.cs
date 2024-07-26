@@ -49,21 +49,11 @@ namespace EpiHot.Controllers
             return PartialView("_AddServiceToReservation", model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddServiceToReservation(AddReservationServiceMW model)
+        public IActionResult UpdateServiceToReservationPartial(int reservationServiceId)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nei dati inseriti";
-                return RedirectToAction("AddServiceToReservationPartial");
-            }
-
-            _serviceSvc.AddServiceToReservation(model.ReservationService);
-
-            TempData["Success"] = "Servizio aggiunto alla prenotazione";
-            return RedirectToAction("Index", "Service");
+            return PartialView("~/Views/Service/_UpdateServiceToReservation.cshtml");
         }
+
 
         public IActionResult AddService(ServiceDto serviceDto)
         {
@@ -98,6 +88,37 @@ namespace EpiHot.Controllers
         public IActionResult DeleteService(int serviceId)
         {
             _serviceSvc.DeleteService(serviceId);
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddServiceToReservation(AddReservationServiceMW model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Errore nei dati inseriti";
+                return RedirectToAction("AddServiceToReservationPartial");
+            }
+
+            _serviceSvc.AddServiceToReservation(model.ReservationService);
+
+            TempData["Success"] = "Servizio aggiunto alla prenotazione";
+            return RedirectToAction("Index", "Service");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateServiceToReservation(AddReservationServiceMW model)
+        {
+            return RedirectToAction("Index", "Service");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteServiceToReservation(int reservationServiceId)
+        {
+            _serviceSvc.DeleteServiceToReservation(reservationServiceId);
             return Json(new { success = true });
         }
     }

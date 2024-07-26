@@ -1,5 +1,90 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model EpiHot.Models.MW.CheckoutMW
+
+<h2>Dettagli Checkout</h2>
+
+<div class="checkout-details">
+    <p><strong>Numero Stanza:</strong> @Model.RoomNumber</p>
+    <p><strong>Periodo:</strong> @Model.StartStayDate.ToString("dd/MM/yyyy") - @Model.EndStayDate.ToString("dd/MM/yyyy")</p>
+    <p><strong>Tariffa Applicata:</strong> @Model.Tariff.ToString("F2") €</p>
+    <p><strong>Caparra:</strong> @Model.Deposit.ToString("F2") €</p>
+    <p><strong>Servizi Aggiuntivi:</strong> @Model.AdditionalServicesTotal.ToString("F2") €</p>
+    <p><strong>Importo da Saldare:</strong> @Model.AmountToPay.ToString("F2") €</p>
+
+    <h3>Servizi Aggiuntivi</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Data del Servizio</th>
+                <th>Nome del Servizio</th>
+                <th>Quantità</th>
+                <th>Prezzo per Servizio</th>
+                <th>Prezzo Totale</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var service in Model.AdditionalServices)
+            {
+                <tr>
+                    <td>@service.ServiceDate.ToString("dd/MM/yyyy")</td>
+                    <td>@service.ServiceType</td>
+                    <td>@service.ServiceQuantity</td>
+                    <td>@service.ServicePrice.ToString("F2") €</td>
+                    <td>@((service.ServiceQuantity * service.ServicePrice).ToString("F2")) €</td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-sm" data-id="@service.ReservationServiceId" onclick="loadUpdateServiceToReservationPartial(@service.ReservationServiceId)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" data-id="@service.ReservationServiceId" onclick="deleteServiceToReservation(@service.ReservationServiceId)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<form id="antiForgeryForm" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
+@section Scripts {
+    <script>
+        function loadUpdateServiceToReservationPartial(reservationServiceId) {
+            $.ajax({
+                url: '@Url.Action("UpdateServiceToReservationPartial", "Checkout")',
+                type: 'GET',
+                data: { reservationServiceId: reservationServiceId },
+                success: function (result) {
+                    $('#partialContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Errore durante il caricamento della partial view: ', status, error);
+                }
+            });
+        }
+
+        function deleteServiceToReservation(reservationServiceId) {
+            var token = $('#antiForgeryForm input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                url: '@Url.Action("DeleteServiceToReservation", "Service")',
+                type: 'POST',
+                data: { 
+                    reservationServiceId: reservationServiceId,
+                    __RequestVerificationToken: token
+                },
+                success: function (result) {
+                    if (result.success) { 
+                        $('button[data-id="' + reservationServiceId + '"]').closest('tr').remove();
+                    } else {
+                        alert('Errore durante la cancellazione del servizio.');
+                    }
+                }, 
+                error: function (xhr, status, error) {
+                    alert('Errore durante la cancellazione del servizio.');
+                }
+            });
+        }
+    </script>
 }

@@ -99,34 +99,6 @@ namespace EpiHot.Services
             }
         }
 
-        public void AddServiceToReservation(ReservationServiceDto reservationService)
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
-                {
-                    conn.Open();
-                    const string INSERT_COMMAND = @"
-                    INSERT INTO ReservationsServices 
-                    (ReservationId, ServiceId, ServiceDate, ServiceQuantity, ServicePrice) 
-                    VALUES (@ReservationId, @ServiceId, @ServiceDate, @ServiceQuantity, @ServicePrice)";
-                    using (SqlCommand cmd = new SqlCommand(INSERT_COMMAND, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@ReservationId", reservationService.ReservationId);
-                        cmd.Parameters.AddWithValue("@ServiceId", reservationService.ServiceId);
-                        cmd.Parameters.AddWithValue("@ServiceDate", reservationService.ServiceDate);
-                        cmd.Parameters.AddWithValue("@ServiceQuantity", reservationService.ServiceQuantity);
-                        cmd.Parameters.AddWithValue("@ServicePrice", reservationService.ServicePrice);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Errore nell'aggiunta del servizio alla prenotazione", ex);
-            }
-        }
-
         public void UpdateService(Service service)
         {
             try
@@ -167,6 +139,164 @@ namespace EpiHot.Services
             catch (Exception ex)
             {
                 throw new Exception("Errore nell'eliminazione del servizio", ex);
+            }
+        }
+
+        public ReservationService GetServiceToReservation(int reservationServiceId)
+        {
+            try
+            {
+                ReservationService reservationService = null;
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string SELECT_BY_ID_CMD = "SELECT * FROM ReservationsServices WHERE ReservationServiceId = @ReservationServiceId";
+                    using (SqlCommand cmd = new SqlCommand(SELECT_BY_ID_CMD, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ReservationServiceId", reservationServiceId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                reservationService = new ReservationService
+                                {
+                                    ReservationServiceId = reader.GetInt32(0),
+                                    ReservationId = reader.GetInt32(1),
+                                    ServiceId = reader.GetInt32(2),
+                                    ServiceDate = reader.GetDateTime(3),
+                                    ServiceQuantity = reader.GetInt32(4),
+                                    ServicePrice = reader.GetDecimal(5)
+                                };
+                            }
+                        }
+                    }
+                }
+                return reservationService;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errore nel recupero del servizio della prenotazione", ex);
+            }
+        }
+
+        public List<ReservationService> GetServicesToReservation(int reservationId)
+        {
+            try
+            {
+                List<ReservationService> reservationServices = new List<ReservationService>();
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string SELECT_BY_RESERVATION_ID_CMD = "SELECT * FROM ReservationsServices WHERE ReservationId = @ReservationId";
+                    using (SqlCommand cmd = new SqlCommand(SELECT_BY_RESERVATION_ID_CMD, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ReservationId", reservationId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ReservationService reservationService = new ReservationService
+                                {
+                                    ReservationServiceId = reader.GetInt32(0),
+                                    ReservationId = reader.GetInt32(1),
+                                    ServiceId = reader.GetInt32(2),
+                                    ServiceDate = reader.GetDateTime(3),
+                                    ServiceQuantity = reader.GetInt32(4),
+                                    ServicePrice = reader.GetDecimal(5)
+                                };
+                                reservationServices.Add(reservationService);
+                            }
+                        }
+                    }
+                }
+                return reservationServices;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errore nel recupero dei servizi della prenotazione", ex);
+            }
+        }
+
+        public void AddServiceToReservation(ReservationServiceDto reservationService)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string INSERT_COMMAND = @"
+                    INSERT INTO ReservationsServices 
+                    (ReservationId, ServiceId, ServiceDate, ServiceQuantity, ServicePrice) 
+                    VALUES (@ReservationId, @ServiceId, @ServiceDate, @ServiceQuantity, @ServicePrice)";
+                    using (SqlCommand cmd = new SqlCommand(INSERT_COMMAND, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ReservationId", reservationService.ReservationId);
+                        cmd.Parameters.AddWithValue("@ServiceId", reservationService.ServiceId);
+                        cmd.Parameters.AddWithValue("@ServiceDate", reservationService.ServiceDate);
+                        cmd.Parameters.AddWithValue("@ServiceQuantity", reservationService.ServiceQuantity);
+                        cmd.Parameters.AddWithValue("@ServicePrice", reservationService.ServicePrice);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errore nell'aggiunta del servizio alla prenotazione", ex);
+            }
+        }
+
+        public void UpdateServiceToReservation(ReservationService reservationService)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string UPDATE_CMD = @"
+                    UPDATE ReservationsServices
+                    SET
+                        ReservationId = @ReservationId,
+                        ServiceId = @ServiceId,
+                        ServiceDate = @ServiceDate,
+                        ServiceQuantity = @ServiceQuantity,
+                        ServicePrice = @ServicePrice
+                    WHERE ReservationServiceId = @ReservationServiceId";
+                    using (SqlCommand cmd = new SqlCommand(UPDATE_CMD, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ReservationId", reservationService.ReservationId);
+                        cmd.Parameters.AddWithValue("@ServiceId", reservationService.ServiceId);
+                        cmd.Parameters.AddWithValue("@ServiceDate", reservationService.ServiceDate);
+                        cmd.Parameters.AddWithValue("@ServiceQuantity", reservationService.ServiceQuantity);
+                        cmd.Parameters.AddWithValue("@ServicePrice", reservationService.ServicePrice);
+                        cmd.Parameters.AddWithValue("@ReservationServiceId", reservationService.ReservationServiceId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errore nell'aggiornamento del servizio della prenotazione", ex);
+            }
+        }
+
+        public void DeleteServiceToReservation(int reservationServiceId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                {
+                    conn.Open();
+                    const string DELETE_CMD = "DELETE FROM ReservationsServices WHERE ReservationServiceId = @ReservationServiceId";
+                    using (SqlCommand cmd = new SqlCommand(DELETE_CMD, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ReservationServiceId", reservationServiceId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errore nell'eliminazione del servizio della prenotazione", ex);
             }
         }
     }
